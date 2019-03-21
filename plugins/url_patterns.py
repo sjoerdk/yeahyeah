@@ -126,7 +126,7 @@ class URLPatternFactory:
 
 
 class URLPatternList:
-    """A persistable list of url patterns"""
+    """A persistable list of url path_items"""
 
     def __init__(self, patterns):
         """
@@ -134,7 +134,7 @@ class URLPatternList:
         Parameters
         ----------
         patterns: List[UrlPattern]
-            list of patterns in this list
+            list of path_items in this list
         """
         self.patterns = patterns
 
@@ -226,7 +226,7 @@ def open_url(url):
 
 class UrlPatternsPlugin(YeahYeahPlugin):
     def __init__(self, pattern_list):
-        """Plugin that holds URL patterns
+        """Plugin that holds URL path_items
 
         Parameters
         ----------
@@ -304,7 +304,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         def status():
             """Print some info for this plugin"""
             status_str = f"UrlPatternsPlugin:\n" \
-                         f"{len(self.get_menu_items())} patterns in plugin\n"
+                         f"{len(self.get_menu_items())} path_items in plugin\n"
             if self.config_file_path:
                 status_str += f"Config file: {self.config_file_path}"
             click.echo(status_str)
@@ -334,7 +334,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
 
         @click.command()
         def list():
-            """list all url patterns"""
+            """list all url path_items"""
             click.echo("\n".join([str(x) for x in self.pattern_list]))
 
         return [status, list, add, remove]

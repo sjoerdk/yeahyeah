@@ -1,33 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `yeahyeah` package."""
-import webbrowser
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
 
 from click.testing import CliRunner
 
-from yeahyeah import cli
-from yeahyeah.core import YeahYeahMenuItem, YeahYeah
-from yeahyeah.url_pattern import (
+from yeahyeah.core import YeahYeahMenuItem
+from plugins.url_patterns import (
     UrlPattern,
     URLPatternList,
     WildCardUrlPattern,
     UrlPatternsPlugin,
 )
 from tests import RESOURCE_PATH
-
-
-@pytest.fixture()
-def mock_web_browser(monkeypatch):
-    """Mock the python standard webbrowser lib so it does not open any windows
-    """
-    mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("yeahyeah.url_pattern.webbrowser", mock_web_browser)
-    return mock_web_browser
 
 
 def test_capture_all(mock_web_browser):
@@ -49,7 +36,7 @@ def test_capture_all(mock_web_browser):
 
 
 def test_persisting(tmpdir):
-    """Test saving and reading url patterns from disk """
+    """Test saving and reading url path_items from disk """
 
     test = UrlPattern(
         name="test",
@@ -119,7 +106,7 @@ def test_url_pattern_plugin_admin(yeahyeah_instance):
         yeahyeah_instance.root_cli, "admin url_patterns status".split(" ")
     )
     assert response.exit_code == 0
-    assert "3 patterns in plugin" in response.output
+    assert "3 path_items in plugin" in response.output
 
 
 def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):

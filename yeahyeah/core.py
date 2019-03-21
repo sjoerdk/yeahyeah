@@ -9,8 +9,9 @@ import click
 class YeahYeah:
     """A cli module that has menu items
     """
+
     def __init__(self):
-        self.configuration_path = Path.home() / 'yeahyeah_config'
+        self.configuration_path = Path.home() / "yeahyeah_config"
         self.plugins = []
         self.root_cli = self.get_root_cli()
         self.admin_cli = self.admin_cli_group()
@@ -19,10 +20,12 @@ class YeahYeah:
     @staticmethod
     def get_root_cli():
         """Get the base click group for yeahyeah"""
+
         @click.group()
         def root_cli():
             """Yeahyeah launch things
             """
+
         return root_cli
 
     def add_plugin(self, plugin):
@@ -41,6 +44,7 @@ class YeahYeah:
         def plugin_admin():
             f"""Admin for {plugin.slug}"""
             pass
+
         for command in plugin.get_admin_commands():
             plugin_admin.add_command(command)
         self.admin_cli.add_command(plugin_admin)
@@ -125,4 +129,3 @@ class YeahYeahPlugin:
 
         """
         raise NotImplementedError()
-
