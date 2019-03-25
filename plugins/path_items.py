@@ -1,3 +1,4 @@
+import platform
 import subprocess
 
 import click
@@ -270,4 +271,8 @@ def open_terminal(path):
     path: Path
         The path to open terminal on
     """
-    subprocess.Popen(args=['konsole', '-e', 'bash', '-c', f'cd {path}; $SHELL'])
+
+    if platform.system() == 'Linux':
+        subprocess.Popen(args=['konsole', '-e', 'bash', '-c', f'cd {path}; $SHELL'])
+    else:
+        raise NotImplemented(f"Opening new terminal not supported on platform '{platform.system()}'")
