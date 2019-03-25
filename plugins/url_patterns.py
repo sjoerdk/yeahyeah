@@ -3,6 +3,7 @@ import webbrowser
 
 import click
 import yaml
+from yaml.loader import Loader
 
 from yeahyeah.core import YeahYeahMenuItem, YeahYeahPlugin
 
@@ -49,7 +50,7 @@ class UrlPattern(YeahYeahMenuItem):
         @click.command(name=self.name, help=self.help_text)
         def the_command(**kwargs):
             url = self.pattern.format(**kwargs)
-            click.echo(f"loading {url}")
+            click.echo(url)
             open_url(url)
 
         for argument_name in arguments:
@@ -196,7 +197,7 @@ class URLPatternList:
 
 
         """
-        loaded = yaml.load(file)
+        loaded = yaml.load(file, Loader=Loader)
 
         if type(loaded) is not dict:
             msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
@@ -233,7 +234,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         pattern_list: URLPatternList
 
         """
-        super().__init__(slug="url_patterns")
+        super().__init__(slug="url_patterns", short_slug='url')
         self.pattern_list = pattern_list
         self.config_file_path = None
 

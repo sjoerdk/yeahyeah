@@ -20,9 +20,8 @@ def test_plugin(url_pattern_list, mock_web_browser):
     plugin = UrlPatternsPlugin(pattern_list=url_pattern_list)
     yeahyeah.add_plugin(plugin)
 
-    # after adding plugin you should be able to call one of the methods
     runner = CliRunner()
     assert (
         runner.invoke(yeahyeah.root_cli, ["test1", "val1", "val2"]).output
-        == "loading https://hostval1/somethingval2.php\n"
+        == "https://hostval1/somethingval2.php\n"
     )

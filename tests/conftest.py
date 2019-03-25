@@ -49,7 +49,7 @@ def yeahyeah_instance(url_pattern_list, path_item_list):
     """An instance of the yeahyeah launch manager with some default plugins and commands"""
     yeahyeah = YeahYeah()
     yeahyeah.add_plugin(UrlPatternsPlugin(pattern_list=url_pattern_list))
-    yeahyeah.add_plugin(PathItemPlugin(path_item_list=path_item_list))
+    yeahyeah.add_plugin(PathItemPlugin(item_list=path_item_list))
 
     return yeahyeah
 

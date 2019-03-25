@@ -2,6 +2,7 @@ import subprocess
 
 import click
 import yaml
+from yaml.loader import Loader
 
 from yeahyeah.core import YeahYeahMenuItem, YeahYeahPlugin
 
@@ -29,10 +30,9 @@ class PathItem(YeahYeahMenuItem):
 
         @click.command(name=self.name, help=self.help_text)
         def the_command():
-            click.echo(f"jumping to {self.path}")
-            command = f'konsole -e bash --init-file <(echo ". \\\"$HOME/.bashrc\\\"; cd {self.path}")'
-            click.echo(f"executing {command}")
-            subprocess.run(command, shell=True)
+            click.echo(self.path)
+
+            open_terminal(self.path)
 
         return the_command
 
@@ -62,7 +62,6 @@ class PathItem(YeahYeahMenuItem):
         help_text = values.get("text", None)
 
         return PathItem(name=name, path=path, help_text=help_text)
-
 
 
 class PathItemList:
@@ -135,7 +134,7 @@ class PathItemList:
 
 
         """
-        loaded = yaml.load(file)
+        loaded = yaml.load(file, Loader=Loader)
 
         if type(loaded) is not dict:
             msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
@@ -157,7 +156,7 @@ class PathItemPlugin(YeahYeahPlugin):
         item_list: PathItemList
 
         """
-        super().__init__(slug="path_items")
+        super().__init__(slug="path_items", short_slug='path')
         self.item_list = item_list
         self.config_file_path = None
 
@@ -259,3 +258,16 @@ class PathItemPlugin(YeahYeahPlugin):
             click.echo("\n".join([str(x) for x in self.item_list]))
 
         return [status, list, add, remove]
+
+
+def open_terminal(path):
+    """Open a terminal at the given path.
+
+    Opens Konsole on linux, cmd on windows
+
+    Parameters
+    ----------
+    path: Path
+        The path to open terminal on
+    """
+    subprocess.Popen(args=['konsole', '-e', 'bash', '-c', f'cd {path}; $SHELL'])

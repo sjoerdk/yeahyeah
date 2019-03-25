@@ -16,6 +16,7 @@ class YeahYeah:
         self.root_cli = self.get_root_cli()
         self.admin_cli = self.admin_cli_group()
         self.root_cli.add_command(self.admin_cli)
+        self.admin_cli.add_command(self.install_info_cli_action())
 
     @staticmethod
     def get_root_cli():
@@ -38,7 +39,9 @@ class YeahYeah:
         """
         self.plugins.append(plugin)
         for pattern in plugin.get_menu_items():
-            self.root_cli.add_command(pattern.to_click_command())
+            command = pattern.to_click_command()
+            command.help += f" ({plugin.short_slug})"
+            self.root_cli.add_command(command)
 
         @click.group(name=plugin.slug, help=f"Admin for {plugin.slug}")
         def plugin_admin():
@@ -58,6 +61,23 @@ class YeahYeah:
             pass
 
         return admin
+
+    @staticmethod
+    def install_info_cli_action():
+        """Returns a click action that prints some info on how to get auto-completion to work for yeahyeah
+        """
+        @click.command()
+        def enable_autocompletion():
+            """Print information on how to enable command auto-completion"""
+            click.echo('Execute the following line in a terminal to enable auto-completion for that terminal only:\n'
+                       '\n'
+                       '    $ eval "$(_JJ_COMPLETE=source jj)"\n'
+                       '\n'
+                       'To enable auto completion permanently, run this\n'
+                       '\n'
+                       '    $ echo "eval $(_JJ_COMPLETE=source jj)" >> ~/.bashrc\n')
+
+        return enable_autocompletion
 
 
 class YeahYeahMenuItem:
@@ -99,15 +119,22 @@ class YeahYeahMenuItem:
 class YeahYeahPlugin:
     """A thing that can generate YeahYeahMenuItems that can be added"""
 
-    def __init__(self, slug):
+    def __init__(self, slug, short_slug=None):
         """
 
         Parameters
         ----------
         slug: str
             short, no space name to use for describing this plugin but also as key for admin functions
+        short_slug: str, optional
+            Slug which is a short as possible, to append to options help text. For example 'url', or 'path'. Defaults
+            to slug
         """
         self.slug = slug
+        if not short_slug:
+            short_slug = slug
+        self.short_slug = short_slug
+
 
     def get_menu_items(self):
         """Get all menu items that this plugin has

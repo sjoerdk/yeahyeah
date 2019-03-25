@@ -18,7 +18,6 @@ jj = YeahYeah()
 
 # add plugins
 jj.add_plugin(UrlPatternsPlugin.__from_file_path__(config_file_path=jj.configuration_path / "url_patterns.yaml"))
-plugin = PathItemPlugin.__from_file_path__(config_file_path=jj.configuration_path / "path_items.yaml")
-jj.add_plugin(plugin)
+jj.add_plugin(PathItemPlugin.__from_file_path__(config_file_path=jj.configuration_path / "path_items.yaml"))
 
 yeahyeah = jj.root_cli   # base click command line entry point
