@@ -23,6 +23,18 @@ you through the process.
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 
+Enable autocompletion (linux only)
+----------------------------------
+
+After installation type
+
+.. code-block:: console
+
+    $ jj admin enable-autocompletion
+
+for instructions on enabling bash tab-autocompletion for all commands
+
+
 From sources
 ------------
 
@@ -49,3 +61,4 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/sjoerdk/yeahyeah
 .. _tarball: https://github.com/sjoerdk/yeahyeah/tarball/master
+

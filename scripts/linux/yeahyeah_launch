@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# ================================================================================
+# yeahyeah_launch
+# ---------------
+# A non-essential bash script that you could use to make yeahyeah more effective.
+#
+# This bash script is meant to link to a keyboard shortcut to streamline the
+# launching of things. Instead of
+#  <open or look for terminal>
+#  <type 'jj '>
+#  <your actual yeahyeah command>
+#
+# it now becomes
+#  <keyboard shortcut>
+#  <yeahyeah command>
+#
+# And you end up with way less unneeded steps, less throw away terminals, and for some people, like me,
+# more mental space.
+#
+# Installation
+# ------------
+# * Install yeahyeah: https://yeahyeah.readthedocs.io
+# * Enable yeahyeah autocompletion:
+# * Copy this script into /usr/local/bin and make sure it's executable
+# * Make sure xdotool is installed. Can be installed with `sudo apt install xdotool`
+# * Create the directory /var/run/yeahyeah/ and make sure it's writable
+# * Create a konsole profile named 'yeahyeah' and make any changes you want to it
+# * Create a keyboard shortcut to launch this script
+# ================================================================================
+
+
+# Have one separate yeahyeah window per X11 session
+YEAHYEAH_PID_FILE="/var/run/yeahyeah/yeahyeah_window$DISPLAY.pid"
+
+function yeahyeah_launch {
+    # check whether process exists
+    YEAHYEAH_PID=$(cat $YEAHYEAH_PID_FILE)
+    if ps -p $YEAHYEAH_PID > /dev/null
+    then
+        echo already exists, bring to foreground
+        YEAHYEAH_WINDOW_ID=$(xdotool search --pid $YEAHYEAH_PID | tail -1)
+        xdotool windowactivate $YEAHYEAH_WINDOW_ID & xdotool type "jj "
+    else
+        echo creating new..
+        create_new_yeahyeah_window &
+    fi
+
+    return
+
+}
+
+function create_new_yeahyeah_window {
+    konsole --profile yeahyeah & echo $! > $YEAHYEAH_PID_FILE
+}
+
+yeahyeah_launch
