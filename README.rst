@@ -14,6 +14,10 @@ yeahyeah
      :target: https://pyup.io/repos/github/sjoerdk/yeahyeah/
      :alt: Updates
 
+.. image:: https://codecov.io/gh/sjoerdk/yeahyeah/branch/master/graph/badge.svg
+     :target: https://codecov.io/gh/sjoerdk/yeahyeah
+
+
 
 
 CLI launch manager. Dispense with the 5 manual steps for everything, just say yeah yeah I know just do it come on move
