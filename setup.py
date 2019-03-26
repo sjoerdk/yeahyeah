@@ -15,7 +15,7 @@ requirements = ["Click>=6.0", "pyyaml"]
 
 setup_requirements = ["pytest-runner"]
 
-test_requirements = ["pytest"]
+test_requirements = ["pytest", "click"]
 
 setup(
     author="Sjoerd Kerkstra",
