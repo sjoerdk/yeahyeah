@@ -134,3 +134,17 @@ def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):
     assert len(url_pattern_plugin.pattern_list) == 3
 
 
+def test_url_pattern_plugin_admin_add_escape_all(yeahyeah_instance):
+    """Make sure nothing in url gets interpreted except the {} patterns"""
+    runner = CliRunner()
+    url_pattern_plugin = yeahyeah_instance.plugins[0]
+
+    assert len(url_pattern_plugin.pattern_list) == 3
+
+    response = runner.invoke(
+        yeahyeah_instance.admin_cli,
+        "url_patterns add a_url https://host.{param1}/space%20index.html".split(" ")
+    )
+    assert response.exit_code == 0
+    assert len(url_pattern_plugin.pattern_list) == 4
+
