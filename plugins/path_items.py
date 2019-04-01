@@ -30,10 +30,11 @@ class PathItem(YeahYeahMenuItem):
         """
 
         @click.command(name=self.name, help=self.help_text)
-        def the_command():
+        @click.option('--print-only', '-p', is_flag=True)
+        def the_command(print_only):
             click.echo(self.path)
-
-            open_terminal(self.path)
+            if not print_only:
+                open_terminal(self.path)
 
         return the_command
 
@@ -232,7 +233,7 @@ class PathItemPlugin(YeahYeahPlugin):
 
         @click.command()
         @click.argument('keyword')
-        @click.argument('pattern')
+        @click.argument('path')
         def add(keyword, path):
             """Add a new url pattern"""
             pattern = PathItem(name=keyword, path=path)
