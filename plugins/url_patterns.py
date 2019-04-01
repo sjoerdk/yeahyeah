@@ -126,7 +126,71 @@ class URLPatternFactory:
             return UrlPattern(name=name, pattern=pattern, help_text=help_text)
 
 
-class URLPatternList:
+class YeahYeahMenuItemList:
+    """A persistable list of url menu items.
+
+    For human readable saving and loading"""
+
+    def save(self, file):
+        """Save list to file
+
+        Parameters
+        ----------
+        file: Open file handle
+            save to this file
+
+        Returns
+        -------
+
+        """
+        yaml.dump(self.to_dict(), file, default_flow_style=False)
+
+    def to_dict(self):
+        """This URLPatternList as dict, as terse as possible:
+
+        {pattern_name1: {param1: value1,...},
+         pattern_name2: {param2: value2,...},
+        """
+        result = {}
+        for pattern in self.patterns:
+            pattern_dict = pattern.to_dict()
+            result.update(pattern_dict)
+
+        return result
+
+    @staticmethod
+    def load(file):
+        """Try to load a UrlPatternList from file handle
+
+        Parameters
+        ----------
+        file: open file hanle
+
+        Returns
+        -------
+        URLPatternList
+
+        Raises
+        ------
+        TypeError:
+            When object loaded is not a list
+
+
+        """
+        loaded = yaml.load(file, Loader=Loader)
+
+        if type(loaded) is not dict:
+            msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
+            raise TypeError(msg)
+        # flatten to list of dicts
+        pattern_list = []
+        for key, values in loaded.items():
+            pattern_list.append(URLPatternFactory.from_dict({key: values}))
+
+        return URLPatternList(patterns=pattern_list)
+
+
+class URLPatternList(YeahYeahMenuItemList):
     """A persistable list of url path_items"""
 
     def __init__(self, patterns):
