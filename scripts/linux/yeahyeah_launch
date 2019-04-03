@@ -35,18 +35,25 @@ YEAHYEAH_PID_FILE="/var/run/yeahyeah/yeahyeah_window$DISPLAY.pid"
 
 function yeahyeah_launch {
     # check whether process exists
-    YEAHYEAH_PID=$(cat $YEAHYEAH_PID_FILE)
-    if ps -p $YEAHYEAH_PID > /dev/null
+    if ! [ -f "$YEAHYEAH_PID_FILE" ]
     then
-        echo already exists, bring to foreground
-        YEAHYEAH_WINDOW_ID=$(xdotool search --pid $YEAHYEAH_PID | tail -1)
-        xdotool windowactivate $YEAHYEAH_WINDOW_ID & xdotool type "jj "
-    else
         echo creating new..
         create_new_yeahyeah_window &
-    fi
+        return
+    else
+        YEAHYEAH_PID=$(cat $YEAHYEAH_PID_FILE)
+        if ps -p $YEAHYEAH_PID > /dev/null
+        then
+            echo already exists, bring to foreground
+            YEAHYEAH_WINDOW_ID=$(xdotool search --pid $YEAHYEAH_PID | tail -1)
+            xdotool windowactivate $YEAHYEAH_WINDOW_ID & xdotool type "jj "
+        else
+            echo creating new..
+            create_new_yeahyeah_window &
+        fi
 
-    return
+        return
+    fi
 
 }
 
