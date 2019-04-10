@@ -5,10 +5,10 @@ import click
 import yaml
 from yaml.loader import Loader
 
-from yeahyeah.core import YeahYeahMenuItem, YeahYeahPlugin
+from yeahyeah.core import YeahYeahPlugin, MenuItemList, SerialisableMenuItem
 
 
-class PathItem(YeahYeahMenuItem):
+class PathItem(SerialisableMenuItem):
     """A named UNC path"""
 
     def __init__(self, name, path, help_text=None):
@@ -17,6 +17,9 @@ class PathItem(YeahYeahMenuItem):
 
     def __str__(self):
         return f"PathItem {self.name}:{self.path}"
+
+    def get_parameters(self):
+        return {'path': self.path}
 
     @property
     def help_text(self):
@@ -38,19 +41,6 @@ class PathItem(YeahYeahMenuItem):
 
         return the_command
 
-    @classmethod
-    def to_yaml(cls, dumper, obj):
-        """Dump to yaml as dictionary"""
-        return dumper.represent_dict(obj.to_dict())
-
-    def to_dict(self):
-        """Represent this UrlPattern as a dictionary:
-
-        """
-        values = {"path": self.path}
-        if self._help_text is not None:
-            values["text"] = self._help_text
-        return {self.name: values}
 
     @staticmethod
     def from_dict(dict_in):
@@ -66,56 +56,8 @@ class PathItem(YeahYeahMenuItem):
         return PathItem(name=name, path=path, help_text=help_text)
 
 
-class PathItemList:
+class PathItemList(MenuItemList):
     """A persistable list of path items"""
-
-    def __init__(self, path_items):
-        """
-
-        Parameters
-        ----------
-        path_items: List[PathItem]
-        """
-        self.path_items = path_items
-
-    def save(self, file):
-        """Save list to file
-
-        Parameters
-        ----------
-        file: Open file handle
-            save to this file
-
-        Returns
-        -------
-
-        """
-        yaml.dump(self.to_dict(), file, default_flow_style=False)
-
-    def append(self, item):
-        self.path_items.append(item)
-
-    def __iter__(self):
-        return self.path_items.__iter__()
-
-    def __len__(self):
-        return self.path_items.__len__()
-
-    def remove(self, item):
-        return self.path_items.remove(item)
-
-    def to_dict(self):
-        """This URLPatternList as dict, as terse as possible:
-
-        {pattern_name1: {param1: value1,...},
-         pattern_name2: {param2: value2,...},
-        """
-        result = {}
-        for pattern in self.path_items:
-            pattern_dict = pattern.to_dict()
-            result.update(pattern_dict)
-
-        return result
 
     @staticmethod
     def load(file):
@@ -146,7 +88,7 @@ class PathItemList:
         for key, values in loaded.items():
             pattern_list.append(PathItem.from_dict({key: values}))
 
-        return PathItemList(path_items=pattern_list)
+        return PathItemList(items=pattern_list)
 
 
 class PathItemPlugin(YeahYeahPlugin):
@@ -210,7 +152,7 @@ class PathItemPlugin(YeahYeahPlugin):
         -------
         List[UrlPattern]
         """
-        return self.item_list.path_items
+        return self.item_list
 
     def get_admin_commands(self):
         """

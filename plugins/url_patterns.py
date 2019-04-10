@@ -5,19 +5,21 @@ import click
 import yaml
 from yaml.loader import Loader
 
-from yeahyeah.core import YeahYeahMenuItem, YeahYeahPlugin
+from yeahyeah.core import YeahYeahPlugin, SerialisableMenuItem, MenuItemList
 
 
-class UrlPattern(YeahYeahMenuItem):
+class UrlPattern(SerialisableMenuItem):
     """A named url pattern that launches some url and can be saved to disk"""
 
     def __init__(self, name, pattern, help_text=None):
         super().__init__(name, help_text)
-
         self.pattern = pattern
 
     def __str__(self):
         return f"URLPattern {self.name}:{self.pattern}"
+
+    def get_parameters(self):
+        return {'pattern': self.pattern}
 
     @property
     def help_text(self):
@@ -58,24 +60,15 @@ class UrlPattern(YeahYeahMenuItem):
 
         return the_command
 
-    @classmethod
-    def to_yaml(cls, dumper, obj):
-        """Dump to yaml as dictionary"""
-        return dumper.represent_dict(obj.to_dict())
-
-    def to_dict(self):
-        """Represent this UrlPattern as a dictionary:
-
-        """
-        values = {"pattern": self.pattern}
-        if self._help_text is not None:
-            values["text"] = self._help_text
-        return {self.name: values}
-
 
 class WildCardUrlPattern(UrlPattern):
     def __init__(self, name, pattern, help_text=None):
         super().__init__(name, pattern, help_text)
+
+    def get_parameters(self):
+        parameters = super().get_parameters()
+        parameters["capture_all_keywords"] = True
+        return parameters
 
     def to_click_command(self):
         """This url pattern as a click command that can be added with add_command()
@@ -98,14 +91,6 @@ class WildCardUrlPattern(UrlPattern):
 
         return the_command
 
-    def to_dict(self):
-        """Represent this UrlPattern as a dictionary:
-
-        """
-        initial = super().to_dict()
-        initial[self.name]["capture_all_keywords"] = True
-        return initial
-
 
 class URLPatternFactory:
     """Can load UrlPattern of different types from dict"""
@@ -126,38 +111,11 @@ class URLPatternFactory:
             return UrlPattern(name=name, pattern=pattern, help_text=help_text)
 
 
-class YeahYeahMenuItemList:
-    """A persistable list of url menu items.
+class URLPatternList(MenuItemList):
+    """A persistable list of url patterns.
 
     For human readable saving and loading"""
 
-    def save(self, file):
-        """Save list to file
-
-        Parameters
-        ----------
-        file: Open file handle
-            save to this file
-
-        Returns
-        -------
-
-        """
-        yaml.dump(self.to_dict(), file, default_flow_style=False)
-
-    def to_dict(self):
-        """This URLPatternList as dict, as terse as possible:
-
-        {pattern_name1: {param1: value1,...},
-         pattern_name2: {param2: value2,...},
-        """
-        result = {}
-        for pattern in self.patterns:
-            pattern_dict = pattern.to_dict()
-            result.update(pattern_dict)
-
-        return result
-
     @staticmethod
     def load(file):
         """Try to load a UrlPatternList from file handle
@@ -187,91 +145,7 @@ class YeahYeahMenuItemList:
         for key, values in loaded.items():
             pattern_list.append(URLPatternFactory.from_dict({key: values}))
 
-        return URLPatternList(patterns=pattern_list)
-
-
-class URLPatternList(YeahYeahMenuItemList):
-    """A persistable list of url path_items"""
-
-    def __init__(self, patterns):
-        """
-
-        Parameters
-        ----------
-        patterns: List[UrlPattern]
-            list of path_items in this list
-        """
-        self.patterns = patterns
-
-    def save(self, file):
-        """Save list to file
-
-        Parameters
-        ----------
-        file: Open file handle
-            save to this file
-
-        Returns
-        -------
-
-        """
-        yaml.dump(self.to_dict(), file, default_flow_style=False)
-
-    def append(self, item):
-        self.patterns.append(item)
-
-    def __iter__(self):
-        return self.patterns.__iter__()
-
-    def __len__(self):
-        return self.patterns.__len__()
-
-    def remove(self, item):
-        return self.patterns.remove(item)
-
-    def to_dict(self):
-        """This URLPatternList as dict, as terse as possible:
-
-        {pattern_name1: {param1: value1,...},
-         pattern_name2: {param2: value2,...},
-        """
-        result = {}
-        for pattern in self.patterns:
-            pattern_dict = pattern.to_dict()
-            result.update(pattern_dict)
-
-        return result
-
-    @staticmethod
-    def load(file):
-        """Try to load a UrlPatternList from file handle
-
-        Parameters
-        ----------
-        file: open file hanle
-
-        Returns
-        -------
-        URLPatternList
-
-        Raises
-        ------
-        TypeError:
-            When object loaded is not a list
-
-
-        """
-        loaded = yaml.load(file, Loader=Loader)
-
-        if type(loaded) is not dict:
-            msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
-            raise TypeError(msg)
-        # flatten to list of dicts
-        pattern_list = []
-        for key, values in loaded.items():
-            pattern_list.append(URLPatternFactory.from_dict({key: values}))
-
-        return URLPatternList(patterns=pattern_list)
+        return URLPatternList(items=pattern_list)
 
 
 def open_url(url):
@@ -341,7 +215,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
                         name="search", pattern="https://duckduckgo.com/?q={query}"
                     ),
                 ]
-                URLPatternList(patterns=example_patterns).save(f)
+                URLPatternList(items=example_patterns).save(f)
             click.echo(
                 f"UrlPattern config file {config_file_path} did not exist. Creating with default contents.."
             )
@@ -353,7 +227,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         -------
         List[UrlPattern]
         """
-        return self.pattern_list.patterns
+        return self.pattern_list.data
 
     def get_admin_commands(self):
         """

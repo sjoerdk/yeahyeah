@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """Core functionality for yeahyeah launch manager"""
+import collections
 from pathlib import Path
 
 import click
+import yaml
 
 
 class YeahYeah:
@@ -81,7 +83,7 @@ class YeahYeah:
 
 
 class YeahYeahMenuItem:
-    """Something you can add to the base yeahyeah menu"""
+    """Something you can add to the base yeahyeah menu and then launch"""
 
     def __init__(self, name, help_text=None):
         """
@@ -119,6 +121,18 @@ class YeahYeahMenuItem:
 class SerialisableMenuItem(YeahYeahMenuItem):
     """A menu item that you can serialise to and from a dict"""
 
+    def get_parameters(self):
+        """ Any extra parameters as dict. These are saved along with item name and help_text
+
+        Overwrite this in child classes
+
+        Returns
+        -------
+        Dict[param_name:param_value]
+            Parameters for this menu item that need to be persisted
+        """
+        return {}
+
     def to_dict(self):
         """
 
@@ -128,7 +142,82 @@ class SerialisableMenuItem(YeahYeahMenuItem):
             [menu item key: [parameters that need to be saved]]
 
         """
+        values = self.get_parameters()
+        if self._help_text is not None:
+            values["text"] = self._help_text
+        return {self.name: values}
+
+
+class MenuItemList(collections.UserList):
+    """A list-like list of menu items that can be saved to and loaded from a file"""
+
+    def __init__(self, items):
+        """
+
+        Parameters
+        ----------
+        items: List[SerialisableMenuItem]
+            The items to put in this list
+        """
+        self.data = items
+
+    @property
+    def items(self):
+        """I find 'items' more descriptive then 'data' """
+        return self.data
+
+    def save(self, file):
+        """Save list to file
+
+        Parameters
+        ----------
+        file: Open file handle
+            save to this file
+
+        Returns
+        -------
+
+        """
+        yaml.dump(self.to_dict(), file, default_flow_style=False)
+
+    @staticmethod
+    def load(file):
+        """Try to load a MenuItemList from file handle
+
+        Parameters
+        ----------
+        file: open file handle
+
+        Returns
+        -------
+        MenuItemList
+            List of items represented in file
+
+        Raises
+        ------
+        TypeError:
+            When object loaded is not a list
+
+
+        """
         raise NotImplemented()
+
+    def to_dict(self):
+        """This list as dict, as terse as possible:
+
+        {pattern_name1: {param1: value1,...},
+         pattern_name2: {param2: value2,...},
+
+         Notes
+         -----
+         This function is mainly to make yaml dump something readable to file. Dict of dict renders quite well
+        """
+        result = {}
+        for item in self.data:
+            pattern_dict = item.to_dict()
+            result.update(pattern_dict)
+
+        return result
 
 
 class YeahYeahPlugin:

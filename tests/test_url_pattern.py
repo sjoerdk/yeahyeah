@@ -54,7 +54,7 @@ def test_persisting(tmpdir):
     test4 = UrlPattern(name="test4", pattern="https://no_help")
     test5 = WildCardUrlPattern(name="test5", pattern="https://search{query}")
 
-    patterns = URLPatternList(patterns=[test, test2, test3, test4, test5])
+    patterns = URLPatternList(items=[test, test2, test3, test4, test5])
 
     test_file = tmpdir / "urlpatterns.yaml"
     with open(test_file, "w") as f:
@@ -66,10 +66,10 @@ def test_persisting(tmpdir):
     with open(test_file, "r") as f:
         from_file = URLPatternList.load(f)
 
-    assert len(patterns.patterns) == len(from_file.patterns)
-    assert patterns.patterns[0].pattern == from_file.patterns[0].pattern
-    assert patterns.patterns[2].pattern == from_file.patterns[2].pattern
-    assert type(patterns.patterns[4]) == WildCardUrlPattern
+    assert len(patterns) == len(from_file)
+    assert patterns[0].pattern == from_file[0].pattern
+    assert patterns[2].pattern == from_file[2].pattern
+    assert type(patterns[4]) == WildCardUrlPattern
 
 
 def test_load_from_file():
@@ -80,7 +80,7 @@ def test_load_from_file():
     with open(file, "r") as f:
         from_file = URLPatternList.load(f)
 
-    assert from_file.patterns[2].pattern == "https://uniqcodeПривет.com"
+    assert from_file[2].pattern == "https://uniqcodeПривет.com"
 
 
 def test_base_class():

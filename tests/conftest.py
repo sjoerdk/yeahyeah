@@ -15,7 +15,7 @@ from plugins.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern,
 def url_pattern_list():
     """A pattern list with some content"""
     return URLPatternList(
-        patterns=[
+        items=[
             UrlPattern(
                 name="test1", pattern="https://host{pattern1}/something{pattern2}.php"
             ),
@@ -31,7 +31,7 @@ def url_pattern_list():
 
 @pytest.fixture()
 def path_item_list():
-    return PathItemList(path_items=[
+    return PathItemList(items=[
         PathItem(
             name="home",
             path="/home/a_user/",
