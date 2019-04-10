@@ -2,8 +2,6 @@ import platform
 import subprocess
 
 import click
-import yaml
-from yaml.loader import Loader
 
 from yeahyeah.core import YeahYeahPlugin, MenuItemList, SerialisableMenuItem
 
@@ -59,36 +57,7 @@ class PathItem(SerialisableMenuItem):
 class PathItemList(MenuItemList):
     """A persistable list of path items"""
 
-    @staticmethod
-    def load(file):
-        """Try to load a UrlPatternList from file handle
-
-        Parameters
-        ----------
-        file: open file hanle
-
-        Returns
-        -------
-        URLPatternList
-
-        Raises
-        ------
-        TypeError:
-            When object loaded is not a list
-
-
-        """
-        loaded = yaml.load(file, Loader=Loader)
-
-        if type(loaded) is not dict:
-            msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
-            raise TypeError(msg)
-        # flatten to list of dicts
-        pattern_list = []
-        for key, values in loaded.items():
-            pattern_list.append(PathItem.from_dict({key: values}))
-
-        return PathItemList(items=pattern_list)
+    item_classes = [PathItem]
 
 
 class PathItemPlugin(YeahYeahPlugin):

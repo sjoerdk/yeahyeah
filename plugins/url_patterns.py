@@ -2,8 +2,6 @@ import re
 import webbrowser
 
 import click
-import yaml
-from yaml.loader import Loader
 
 from yeahyeah.core import YeahYeahPlugin, SerialisableMenuItem, MenuItemList
 
@@ -62,7 +60,7 @@ class UrlPattern(SerialisableMenuItem):
 
 
 class WildCardUrlPattern(UrlPattern):
-    def __init__(self, name, pattern, help_text=None):
+    def __init__(self, name, pattern, capture_all_keywords=True, help_text=None):
         super().__init__(name, pattern, help_text)
 
     def get_parameters(self):
@@ -92,60 +90,12 @@ class WildCardUrlPattern(UrlPattern):
         return the_command
 
 
-class URLPatternFactory:
-    """Can load UrlPattern of different types from dict"""
-
-    @staticmethod
-    def from_dict(dict_in):
-        """Create a UrlPattern object from given dict.
-
-        Dict should have been created with to_dict()
-        """
-        name = list(dict_in.keys()).pop()
-        values = dict_in[name]
-        pattern = values["pattern"]
-        help_text = values.get("text", None)
-        if "capture_all_keywords" in values.keys():
-            return WildCardUrlPattern(name=name, pattern=pattern, help_text=help_text)
-        else:
-            return UrlPattern(name=name, pattern=pattern, help_text=help_text)
-
-
 class URLPatternList(MenuItemList):
     """A persistable list of url patterns.
 
     For human readable saving and loading"""
 
-    @staticmethod
-    def load(file):
-        """Try to load a UrlPatternList from file handle
-
-        Parameters
-        ----------
-        file: open file hanle
-
-        Returns
-        -------
-        URLPatternList
-
-        Raises
-        ------
-        TypeError:
-            When object loaded is not a list
-
-
-        """
-        loaded = yaml.load(file, Loader=Loader)
-
-        if type(loaded) is not dict:
-            msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
-            raise TypeError(msg)
-        # flatten to list of dicts
-        pattern_list = []
-        for key, values in loaded.items():
-            pattern_list.append(URLPatternFactory.from_dict({key: values}))
-
-        return URLPatternList(items=pattern_list)
+    item_classes = [WildCardUrlPattern, UrlPattern]
 
 
 def open_url(url):

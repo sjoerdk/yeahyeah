@@ -6,6 +6,7 @@ from pathlib import Path
 
 import click
 import yaml
+from yaml.loader import Loader
 
 
 class YeahYeah:
@@ -147,9 +148,23 @@ class SerialisableMenuItem(YeahYeahMenuItem):
             values["text"] = self._help_text
         return {self.name: values}
 
+    @classmethod
+    def from_dict(cls, dict_in):
+        """Create an instance of this object from given dict.
+
+        """
+        name = list(dict_in.keys()).pop()
+        values = dict_in[name]
+        help_text = values.pop("text", None)
+
+        return cls(name=name, help_text=help_text, **values)
+
 
 class MenuItemList(collections.UserList):
     """A list-like list of menu items that can be saved to and loaded from a file"""
+
+    # The type of objects that this list can contain
+    item_classes = [SerialisableMenuItem]
 
     def __init__(self, items):
         """
@@ -180,9 +195,9 @@ class MenuItemList(collections.UserList):
         """
         yaml.dump(self.to_dict(), file, default_flow_style=False)
 
-    @staticmethod
-    def load(file):
-        """Try to load a MenuItemList from file handle
+    @classmethod
+    def load(cls, file):
+        """Try to parse the given file's content into any of the classes in cls.item_classes.
 
         Parameters
         ----------
@@ -195,12 +210,35 @@ class MenuItemList(collections.UserList):
 
         Raises
         ------
-        TypeError:
-            When object loaded is not a list
+        MenuItemLoadError:
+            When object loaded is not a list or when contents could not be parsed as any of the item_classes
 
 
         """
-        raise NotImplemented()
+
+        loaded = yaml.load(file, Loader=Loader)
+
+        if type(loaded) is not dict:
+            msg = f"Expected to load a dictionary, but found {type(loaded)} instead"
+            raise MenuItemLoadError(msg)
+        # flatten to list of dicts
+        item_list = []
+        for key, values in loaded.items():
+            item_as_dict = {key: values}
+            for ItemClass in cls.item_classes:
+                try:
+                    item_instance = ItemClass.from_dict(item_as_dict)
+                    break
+                except TypeError:
+                    item_instance = None
+                    continue
+            if not item_instance:
+                msg = f"Could not create any object from {item_as_dict}. Tried {[str(x) for x in cls.item_classes]}.."
+                raise MenuItemLoadError(msg)
+            else:
+                item_list.append(item_instance)
+
+        return cls(items=item_list)
 
     def to_dict(self):
         """This list as dict, as terse as possible:
@@ -260,3 +298,6 @@ class YeahYeahPlugin:
 
         """
         raise NotImplementedError()
+
+class MenuItemLoadError(Exception):
+    pass
