@@ -8,21 +8,36 @@ from yaml.loader import Loader
 from yeahyeah.core import YeahYeahMenuItem, YeahYeahPlugin
 
 
-class UrlPattern(YeahYeahMenuItem):
-    """A named url pattern that launches some url and can be saved to disk"""
+class Window(YeahYeahMenuItem):
+    """A description of a window in a GUI
+
+    For performing automated tasks on gui windows, like activating.
+    """
 
     def __init__(self, name, pattern, help_text=None):
+        """
+
+        Parameters
+        ----------
+        name: str
+            name of this menuitem. Is also key
+        pattern: str
+            string to match when trying to
+        help_text: str, optional
+            Help text to show in menu. Defaults to 'Raise <name>'
+
+        """
         super().__init__(name, help_text)
 
         self.pattern = pattern
 
     def __str__(self):
-        return f"URLPattern {self.name}:{self.pattern}"
+        return f"Window {self.name}:{self.pattern}"
 
     @property
     def help_text(self):
         if self._help_text is None:
-            return f"launch {self.name}"
+            return f"Raise {self.name}"
         else:
             return self._help_text
 
@@ -42,19 +57,11 @@ class UrlPattern(YeahYeahMenuItem):
         return self.pattern.format(*args_tuple)
 
     def to_click_command(self):
-        """This url pattern as a click command that can be added with add_command()
+        """Return a click command that raises this window if possible.
         """
-
-        arguments = re.findall(r"\{([^{}]*)\}", self.pattern)
-
         @click.command(name=self.name, help=self.help_text)
-        def the_command(**kwargs):
-            url = self.pattern.format(**kwargs)
-            click.echo(url)
-            open_url(url)
-
-        for argument_name in arguments:
-            the_command = click.argument(argument_name, type=click.STRING)(the_command)
+        def the_command():
+            click.echo(f"Raising {self.pattern}")
 
         return the_command
 
@@ -71,40 +78,6 @@ class UrlPattern(YeahYeahMenuItem):
         if self._help_text is not None:
             values["text"] = self._help_text
         return {self.name: values}
-
-
-class WildCardUrlPattern(UrlPattern):
-    def __init__(self, name, pattern, help_text=None):
-        super().__init__(name, pattern, help_text)
-
-    def to_click_command(self):
-        """This url pattern as a click command that can be added with add_command()
-        """
-
-        arguments = re.findall(r"\{([^{}]*)\}", self.pattern)
-
-        @click.command(name=self.name, help=self.help_text)
-        def the_command(**kwargs):
-
-            param_name, param_values = list(kwargs.items()).pop()
-            url = self.pattern.format(**{param_name: " ".join(param_values)})
-            click.echo(f"loading {url}")
-            open_url(url)
-
-        for argument_name in arguments:
-            the_command = click.argument(argument_name, type=click.STRING, nargs=-1)(
-                the_command
-            )
-
-        return the_command
-
-    def to_dict(self):
-        """Represent this UrlPattern as a dictionary:
-
-        """
-        initial = super().to_dict()
-        initial[self.name]["capture_all_keywords"] = True
-        return initial
 
 
 class URLPatternFactory:

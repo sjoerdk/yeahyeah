@@ -116,6 +116,21 @@ class YeahYeahMenuItem:
         raise NotImplementedError()
 
 
+class SerialisableMenuItem(YeahYeahMenuItem):
+    """A menu item that you can serialise to and from a dict"""
+
+    def to_dict(self):
+        """
+
+        Returns
+        -------
+        Dict[str:Dict[param1,param2, etc..]]:
+            [menu item key: [parameters that need to be saved]]
+
+        """
+        raise NotImplemented()
+
+
 class YeahYeahPlugin:
     """A thing that can generate YeahYeahMenuItems that can be added"""
 

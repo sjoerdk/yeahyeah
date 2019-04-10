@@ -2,7 +2,6 @@
 yeahyeah
 ========
 
-
 .. image:: https://img.shields.io/travis/sjoerdk/yeahyeah.svg
         :target: https://travis-ci.org/sjoerdk/yeahyeah
 
@@ -16,7 +15,6 @@ yeahyeah
 
 .. image:: https://codecov.io/gh/sjoerdk/yeahyeah/branch/master/graph/badge.svg
      :target: https://codecov.io/gh/sjoerdk/yeahyeah
-
 
 
 
