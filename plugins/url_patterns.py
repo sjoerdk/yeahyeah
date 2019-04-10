@@ -77,8 +77,11 @@ class WildCardUrlPattern(UrlPattern):
         @click.command(name=self.name, help=self.help_text)
         def the_command(**kwargs):
 
-            param_name, param_values = list(kwargs.items()).pop()
-            url = self.pattern.format(**{param_name: " ".join(param_values)})
+            if kwargs:
+                param_name, param_values = list(kwargs.items()).pop()
+                url = self.pattern.format(**{param_name: " ".join(param_values)})
+            else:
+                url = self.pattern
             click.echo(f"loading {url}")
             open_url(url)
 

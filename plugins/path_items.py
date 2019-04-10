@@ -109,7 +109,7 @@ class PathItemPlugin(YeahYeahPlugin):
                         help_text="(Example) Open that external disk",
                     )
                 ]
-                PathItemList(path_items=example_patterns).save(f)
+                PathItemList(items=example_patterns).save(f)
             click.echo(
                 f"PathItem config file {config_file_path} did not exist. Creating with default contents.."
             )

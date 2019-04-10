@@ -101,10 +101,10 @@ class YeahYeahMenuItem:
 
     @property
     def help_text(self):
-        if self.help_text is None:
+        if self._help_text is None:
             return ""
         else:
-            return self.help_text
+            return self._help_text
 
     def to_click_command(self):
         """Return a click command representation of this action

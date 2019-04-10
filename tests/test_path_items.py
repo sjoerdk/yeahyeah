@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from pathlib import Path
 
 from click.testing import CliRunner
 
@@ -15,6 +16,11 @@ def test_path_item_plugin(path_item_list):
     yeahyeah.add_plugin(plugin)
 
     assert len(plugin.get_menu_items()) == 2
+
+
+def test_path_item_plugin_no_file(path_item_list, tmpdir):
+    plugin = PathItemPlugin(item_list=path_item_list)
+    plugin.assert_config_file(Path(tmpdir) / "path_item_config_test.txt")
 
 
 def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):

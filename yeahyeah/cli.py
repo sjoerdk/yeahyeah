@@ -10,6 +10,7 @@ $ yeahyeah
 
 """
 from plugins.path_items import PathItemPlugin
+from plugins.windowraiser import WindowRaiser
 from yeahyeah.core import YeahYeah
 from plugins.url_patterns import UrlPatternsPlugin
 
@@ -19,5 +20,6 @@ jj = YeahYeah()
 # add plugins
 jj.add_plugin(UrlPatternsPlugin.__from_file_path__(config_file_path=jj.configuration_path / "url_patterns.yaml"))
 jj.add_plugin(PathItemPlugin.__from_file_path__(config_file_path=jj.configuration_path / "path_items.yaml"))
+jj.add_plugin(WindowRaiser.__from_file_path__(config_file_path=jj.configuration_path / "window_items.yaml"))
 
 yeahyeah = jj.root_cli   # base click command line entry point
