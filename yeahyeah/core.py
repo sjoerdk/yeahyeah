@@ -78,7 +78,7 @@ class YeahYeah:
                        '\n'
                        'To enable auto completion permanently, run this\n'
                        '\n'
-                       '    $ echo "eval $(_JJ_COMPLETE=source jj)" >> ~/.bashrc\n')
+                       "    $ echo 'eval \"$(_JJ_COMPLETE=source jj)\"' >> ~/.bashrc\n")
 
         return enable_autocompletion
 

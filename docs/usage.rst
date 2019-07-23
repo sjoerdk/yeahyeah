@@ -2,6 +2,7 @@
 Usage
 =====
 
-To use yeahyeah in a project::
+just type 'jj' into any console after installation to see options.
 
-    import yeahyeah
+<Needs actual information>
+
