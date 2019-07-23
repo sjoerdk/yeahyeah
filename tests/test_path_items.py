@@ -4,7 +4,7 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from plugins.path_items import PathItemPlugin
+from yeahyeah.plugins.path_items import PathItemPlugin
 from tests import RESOURCE_PATH
 from yeahyeah.core import YeahYeah
 

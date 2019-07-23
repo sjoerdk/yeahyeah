@@ -6,9 +6,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from plugins.path_items import PathItem, PathItemList, PathItemPlugin
+from yeahyeah.plugins.path_items import PathItem, PathItemList, PathItemPlugin
 from yeahyeah.core import YeahYeah
-from plugins.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah.plugins.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 
 @pytest.fixture()
@@ -59,5 +59,5 @@ def mock_web_browser(monkeypatch):
     """Mock the python standard webbrowser
     """
     mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("plugins.url_patterns.webbrowser", mock_web_browser)
+    monkeypatch.setattr("yeahyeah.plugins.url_patterns.webbrowser", mock_web_browser)
     return mock_web_browser

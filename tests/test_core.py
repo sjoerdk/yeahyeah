@@ -5,7 +5,7 @@ from click.testing import CliRunner
 
 from yeahyeah import cli
 from yeahyeah.core import YeahYeah
-from plugins.url_patterns import UrlPatternsPlugin
+from yeahyeah.plugins.url_patterns import UrlPatternsPlugin
 
 
 def test_command_line_interface():

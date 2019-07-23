@@ -9,9 +9,9 @@ $ eval "$(_JJ_COMPLETE=source jj)"
 $ yeahyeah
 
 """
-from plugins.path_items import PathItemPlugin
+from yeahyeah.plugins.path_items import PathItemPlugin
+from yeahyeah.plugins.url_patterns import UrlPatternsPlugin
 from yeahyeah.core import YeahYeah
-from plugins.url_patterns import UrlPatternsPlugin
 
 
 jj = YeahYeah()
