@@ -18,7 +18,7 @@
 # And you end up with way less unneeded steps, less throw away terminals, and for some people, like me,
 # more mental space.
 #
-# Installation
+# Installation (tested on Kubuntu 18.04 only)
 # ------------
 # * Install yeahyeah: https://yeahyeah.readthedocs.io
 # * Enable yeahyeah autocompletion:
