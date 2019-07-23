@@ -14,7 +14,7 @@ class YeahYeah:
     """
 
     def __init__(self):
-        self.configuration_path = Path.home() / "yeahyeah_config"
+        self.configuration_path = Path.home() / ".config" / "yeahyeah"
         self.plugins = []
         self.root_cli = self.get_root_cli()
         self.admin_cli = self.admin_cli_group()
