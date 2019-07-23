@@ -35,6 +35,13 @@ After installation type
 for instructions on enabling bash tab-autocompletion for all commands
 
 
+Window raising
+--------------
+
+For linking shortcut keys to raising particular windows, please use https://github.com/MrApplejuice/X11-window-scripts
+
+
+
 From sources
 ------------
 
