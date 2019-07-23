@@ -277,7 +277,6 @@ class YeahYeahPlugin:
             short_slug = slug
         self.short_slug = short_slug
 
-
     def get_menu_items(self):
         """Get all menu items that this plugin has
 
@@ -298,6 +297,7 @@ class YeahYeahPlugin:
 
         """
         raise NotImplementedError()
+
 
 class MenuItemLoadError(Exception):
     pass
