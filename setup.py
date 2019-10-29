@@ -37,7 +37,7 @@ setup(
     include_package_data=True,
     keywords='yeahyeah',
     name='yeahyeah',
-    packages=find_packages(include=['yeahyeah', 'yeahyeah.plugins']),
+    packages=find_packages(include=['yeahyeah', 'yeahyeah.plugins_old']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,

@@ -8,7 +8,7 @@ import pytest
 from click.testing import CliRunner
 
 from yeahyeah.core import YeahYeahMenuItem
-from yeahyeah.plugins.url_patterns import (
+from yeahyeah.plugins_old.url_patterns import (
     UrlPattern,
     URLPatternList,
     WildCardUrlPattern,
@@ -95,7 +95,7 @@ def test_url_pattern_plugin(tmpdir):
     # file should be created if not exists
     plugin = UrlPatternsPlugin.__from_file_path__(config_file_path=config_file)
     assert config_file.exists()
-    items = plugin.get_menu_items()
+    items = plugin.get_commands()
 
     assert len(items) == 3
 

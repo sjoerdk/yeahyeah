@@ -6,9 +6,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from yeahyeah.plugins.path_items import PathItem, PathItemList, PathItemPlugin
+from yeahyeah.plugins_old.path_items import PathItem, PathItemList, PathItemPlugin
 from yeahyeah.core import YeahYeah
-from yeahyeah.plugins.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah.plugins_old.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 
 @pytest.fixture()
@@ -46,7 +46,7 @@ def path_item_list():
 
 @pytest.fixture()
 def yeahyeah_instance(url_pattern_list, path_item_list):
-    """An instance of the yeahyeah launch manager with some default plugins and commands"""
+    """An instance of the yeahyeah launch manager with some default plugins_old and commands"""
     yeahyeah = YeahYeah()
     yeahyeah.add_plugin(UrlPatternsPlugin(pattern_list=url_pattern_list))
     yeahyeah.add_plugin(PathItemPlugin(item_list=path_item_list))
@@ -59,5 +59,5 @@ def mock_web_browser(monkeypatch):
     """Mock the python standard webbrowser
     """
     mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("yeahyeah.plugins.url_patterns.webbrowser", mock_web_browser)
+    monkeypatch.setattr("yeahyeah.plugins_old.url_patterns.webbrowser", mock_web_browser)
     return mock_web_browser

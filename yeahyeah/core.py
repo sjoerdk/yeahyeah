@@ -37,13 +37,11 @@ class YeahYeah:
 
         Parameters
         ----------
-        plugin: YeahYeahPlugin
+        plugin: YeahYeahGeneratorPlugin
 
         """
         self.plugins.append(plugin)
-        for pattern in plugin.get_menu_items():
-            command = pattern.to_click_command()
-            command.help += f" ({plugin.short_slug})"
+        for command in plugin.get_commands():
             self.root_cli.add_command(command)
 
         @click.group(name=plugin.slug, help=f"Admin for {plugin.slug}")
@@ -60,7 +58,7 @@ class YeahYeah:
 
         @click.group()
         def admin():
-            """Admin options for yeahyeah and plugins"""
+            """Admin options for yeahyeah and plugins_old"""
             pass
 
         return admin
@@ -258,8 +256,8 @@ class MenuItemList(collections.UserList):
         return result
 
 
-class YeahYeahPlugin:
-    """A thing that can generate YeahYeahMenuItems that can be added"""
+class YeahYeahGeneratorPlugin:
+    """A thing that can generates YeahYeahMenuItems that can be added"""
 
     def __init__(self, slug, short_slug=None):
         """
@@ -277,13 +275,13 @@ class YeahYeahPlugin:
             short_slug = slug
         self.short_slug = short_slug
 
-    def get_menu_items(self):
-        """Get all menu items that this plugin has
+    def get_commands(self):
+        """All Commands for this plugin
 
         Returns
         -------
-        List[YeahYeahMenuItem]
-            menu items that can be added to a click group using <click_group>.add_command(test)
+        List[click.Command]
+            All click commands that can be executed as part of this plugin
         """
         raise NotImplementedError()
 
