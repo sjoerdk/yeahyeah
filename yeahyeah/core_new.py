@@ -27,10 +27,11 @@ This makes the code less convoluted, more testable and more separated.
 However I can't do all this refactoring in one go. Time constraints. So doing this step by step. Anything in the new
 scheme gets moved here to core_new.py When refactoring is complete this gets renamed to core.py
 """
+import click
 
 
-class YeahYeahSettings:
-    """Core yeahyeah settings object. This gets passed to all plugins by default when calling any plugin method
+class YeahYeahContext:
+    """Core yeahyeah context object. This gets passed to all plugins by default when calling any plugin method
 
     """
     def __init__(self, settings_path):
@@ -42,3 +43,25 @@ class YeahYeahSettings:
             Path to the folder where any settings can be stored
         """
         self.settings_path = settings_path
+
+
+pass_yeahyeah_context = click.make_pass_decorator(YeahYeahContext)
+
+
+def receives_yeahyeah_context(**kwargs):
+    """Decorator for a click command that receives a YeahYeahContext object.
+
+    Identical to
+
+    @click.command(**kwargs)
+    @click.pass_yeahyeah_context
+
+    Just to prevent duplicated code
+    """
+
+    def decorator(func):
+        return click.command(**kwargs)((pass_yeahyeah_context(func)))
+
+    return decorator
+
+

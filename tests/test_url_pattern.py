@@ -7,7 +7,7 @@ import pytest
 
 from click.testing import CliRunner
 
-from yeahyeah.core import YeahYeahMenuItem
+from yeahyeah.objects import YeahYeahMenuItem
 from yeahyeah.plugins_old.url_patterns import (
     UrlPattern,
     URLPatternList,

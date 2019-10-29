@@ -3,7 +3,12 @@ import webbrowser
 
 import click
 
-from yeahyeah.core import YeahYeahGeneratorPlugin, SerialisableMenuItem, MenuItemList
+from yeahyeah.cli_new import YeahYeahPlugin
+from yeahyeah.core_new import YeahYeahContext
+from yeahyeah.objects import SerialisableMenuItem, MenuItemList
+
+
+default_settings_file_name = 'url_patterns.yaml'
 
 
 class UrlPattern(SerialisableMenuItem):
@@ -116,7 +121,11 @@ def open_url(url):
     webbrowser.open_new(url)
 
 
-class UrlPatternsPlugin(YeahYeahGeneratorPlugin):
+class UrlPatternsPlugin(YeahYeahPlugin):
+
+    slug = "url_patterns"
+    short_slug = 'url'
+
     def __init__(self, pattern_list):
         """Plugin that holds URL path_items
 
@@ -125,9 +134,19 @@ class UrlPatternsPlugin(YeahYeahGeneratorPlugin):
         pattern_list: URLPatternList
 
         """
-        super().__init__(slug="url_patterns", short_slug='url')
         self.pattern_list = pattern_list
         self.config_file_path = None
+
+    @classmethod
+    def init_from_context(cls, context: YeahYeahContext):
+        settings_file_path = context.settings_path / default_settings_file_name
+        cls.assert_config_file(settings_file_path)
+        with open(settings_file_path, "r") as f:
+            pattern_list = URLPatternList.load(f)
+
+        obj = cls(pattern_list=pattern_list)
+        obj.config_file_path = settings_file_path
+        return obj
 
     @classmethod
     def __from_file_path__(cls, config_file_path):

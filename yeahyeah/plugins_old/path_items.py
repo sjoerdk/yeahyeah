@@ -3,7 +3,11 @@ import subprocess
 
 import click
 
-from yeahyeah.core import YeahYeahGeneratorPlugin, MenuItemList, SerialisableMenuItem
+from yeahyeah.cli_new import YeahYeahPlugin
+from yeahyeah.core_new import YeahYeahContext
+from yeahyeah.objects import SerialisableMenuItem, MenuItemList
+
+default_settings_file_name = 'path_items.yaml'
 
 
 class PathItem(SerialisableMenuItem):
@@ -63,7 +67,11 @@ class PathItemList(MenuItemList):
     item_classes = [PathItem]
 
 
-class PathItemPlugin(YeahYeahGeneratorPlugin):
+class PathItemPlugin(YeahYeahPlugin):
+
+    slug = "path_items"
+    short_slug = 'path'
+
     def __init__(self, item_list):
         """Plugin that holds PathItems
 
@@ -72,9 +80,19 @@ class PathItemPlugin(YeahYeahGeneratorPlugin):
         item_list: PathItemList
 
         """
-        super().__init__(slug="path_items", short_slug='path')
         self.item_list = item_list
         self.config_file_path = None
+
+    @classmethod
+    def init_from_context(cls, context: YeahYeahContext):
+        settings_file_path = context.settings_path / default_settings_file_name
+        cls.assert_config_file(settings_file_path)
+        with open(settings_file_path, "r") as f:
+            item_list = PathItemList.load(f)
+
+        obj = cls(item_list=item_list)
+        obj.config_file_path = settings_file_path
+        return obj
 
     @classmethod
     def __from_file_path__(cls, config_file_path):
@@ -184,8 +202,6 @@ class PathItemPlugin(YeahYeahGeneratorPlugin):
 
 def open_terminal(path):
     """Open a terminal at the given path.
-
-    Opens Konsole on linux, cmd on windows
 
     Parameters
     ----------
