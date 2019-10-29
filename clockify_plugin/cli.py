@@ -4,6 +4,7 @@ import click
 
 from clockify_plugin.context import ClockifyPluginContext, pass_clockify_context, default_context
 from clockify_plugin.context import default_settings_file_name
+from clockify_plugin.decorators import handle_clockify_exceptions
 from clockify_plugin.parameters import TIME
 from yeahyeah.core_new import YeahYeahContext, pass_yeahyeah_context
 from yeahyeah.persistence import JSONSettingsFile
@@ -25,7 +26,7 @@ def main(context: YeahYeahContext, ctx):
 @pass_clockify_context
 def status(context: ClockifyPluginContext):
     """Show server and api key"""
-    click.echo(f"Using api key {context.api_key} with clockify server '{context.api_url}'")
+    click.echo(f"Using clockify web API session {context.session}")
 
 
 @click.command()
@@ -60,12 +61,16 @@ def add(context: ClockifyPluginContext, message, project, time):
     default=0,
     help="Time (HH:MM) or time increment(+/-MM or +/-HH:MM)",
 )
+@handle_clockify_exceptions
 def stop(context: ClockifyPluginContext, time):
     """stop any active logging stopwatch"""
-    click.echo(f"Stopping")
     if not time:
         time = datetime.datetime.utcnow()
-    context.session.stop_timer(time)
+    result = context.session.stop_timer(time)
+    if result:
+        click.echo(f"stopped {result}")
+    else:
+        click.echo("No timer was running")
 
 
 @click.command()
