@@ -3,12 +3,16 @@
 """
 
 import click
+from clockifyclient.api import APIServer
+from clockifyclient.client import APISession
 
 
 class ClockifyPluginContext:
     def __init__(self, api_url, api_key):
         self.api_url = api_url
         self.api_key = api_key
+        self.session = APISession(api_server=APIServer(api_url),
+                                  api_key=api_key)
 
     @classmethod
     def init_from_dict(cls, dict_in):

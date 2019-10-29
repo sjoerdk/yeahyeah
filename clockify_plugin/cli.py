@@ -4,6 +4,7 @@ import click
 
 from clockify_plugin.context import ClockifyPluginContext, pass_clockify_context, default_context
 from clockify_plugin.context import default_settings_file_name
+from clockify_plugin.parameters import TIME
 from yeahyeah.core_new import YeahYeahContext, pass_yeahyeah_context
 from yeahyeah.persistence import JSONSettingsFile
 
@@ -33,26 +34,38 @@ def status(context: ClockifyPluginContext):
 @click.option("-p", "--project", type=str)
 @click.option(
     "-t",
-    "--timedelta",
-    type=int,
+    "--time",
+    type=TIME,
     default=0,
-    help="minutes to add or subtract to now() for start of log",
+    help="Time (HH:MM) or time increment(+/-MM or +/-HH:MM)",
 )
-def add(context: ClockifyPluginContext, message, project, timedelta):
+def add(context: ClockifyPluginContext, message, project, time):
     """add log message"""
     if not message:
         click.echo("Log message may not be empty")
         return
-    log_start = datetime.datetime.utcnow() + datetime.timedelta(minutes=timedelta)
+    if not time:
+        time = datetime.datetime.utcnow()
+    log_start = time
     #self.clockify_session.add_time_entry()
-    click.echo(f"Adding {' '.join(message)} at {log_start} to project {project}")
+    click.echo(f"Adding {' '.join(message)} at {log_start} UTC to project {project}")
 
 
 @click.command()
 @pass_clockify_context
-def stop(context: ClockifyPluginContext):
+@click.option(
+    "-t",
+    "--time",
+    type=TIME,
+    default=0,
+    help="Time (HH:MM) or time increment(+/-MM or +/-HH:MM)",
+)
+def stop(context: ClockifyPluginContext, time):
     """stop any active logging stopwatch"""
     click.echo(f"Stopping")
+    if not time:
+        time = datetime.datetime.utcnow()
+    context.session.stop_timer(time)
 
 
 @click.command()
