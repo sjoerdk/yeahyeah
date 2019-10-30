@@ -11,7 +11,7 @@ from clockifyclient.models import Project
 from clockify_plugin.cli import main, stop, projects, add, find_project
 from clockify_plugin.context import ClockifyPluginContext
 from tests.conftest import MockContextCliRunner
-from yeahyeah.core_new import YeahYeahContext
+from yeahyeah.cli_new import YeahYeahContext
 
 
 @pytest.fixture

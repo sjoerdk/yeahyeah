@@ -8,7 +8,7 @@ import pytest
 from click.testing import CliRunner
 
 from yeahyeah.plugins_old.path_items import PathItem, PathItemList, PathItemPlugin
-from yeahyeah.core import YeahYeah
+from yeahyeah.core_new import YeahYeah
 from yeahyeah.plugins_old.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 

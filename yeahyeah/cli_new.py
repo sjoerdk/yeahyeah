@@ -6,13 +6,6 @@ from pathlib import Path
 
 import click
 
-from yeahyeah.core_new import YeahYeahContext
-
-
-def get_settings():
-    """Core yeahyeah settings that get passed to each plugin"""
-    return YeahYeahContext(settings_path=Path.home() / ".config" / "yeahyeah")
-
 
 @click.group()
 @click.pass_context
@@ -46,39 +39,21 @@ admin.add_command(enable_autocompletion)
 root_cli.add_command(admin)
 
 
-class YeahYeahPlugin:
-    """Some named thing that adds launchable commands to yeahyeah"""
+class YeahYeahContext:
+    """Core yeahyeah context object. This gets passed to all plugins by default when calling any plugin method
 
-    slug = 'BasePlugin'  # Short, no space name to use for describing this plugin but also as key for admin functions
-    short_slug = 'Base'   # Shorter slug, to append to options help text. For example 'url', or 'path'
-
-    def __init__(self, context: YeahYeahContext):
+    """
+    def __init__(self, settings_path):
         """
 
         Parameters
         ----------
-        context: YeahYeahContext
-            Context of the root yeahyeah module
+        settings_path: Pathlike
+            Path to the folder where any settings can be stored
         """
-        raise NotImplemented()
+        self.settings_path = settings_path
 
-    def get_commands(self):
-        """All Commands for this plugin
 
-        Returns
-        -------
-        List[click.Command]
-            All click commands that can be executed as part of this plugin
-        """
-        raise NotImplementedError()
-
-    def get_admin_commands(self):
-        """Action to do admin tasks for this plugin, if any
-
-        Returns
-        -------
-        List[click.Command]
-            List of click commands that can be used to admin this plugin
-
-        """
-        raise NotImplementedError()
+def get_settings():
+    """Core yeahyeah settings that get passed to each plugin"""
+    return YeahYeahContext(settings_path=Path.home() / ".config" / "yeahyeah")

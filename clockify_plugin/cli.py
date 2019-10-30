@@ -7,7 +7,8 @@ from clockify_plugin.context import default_settings_file_name
 from clockify_plugin.decorators import handle_clockify_exceptions
 from clockify_plugin.parameters import TIME
 from clockify_plugin.time import as_local, now_local
-from yeahyeah.core_new import YeahYeahContext, pass_yeahyeah_context
+from yeahyeah.decorators import pass_yeahyeah_context
+from yeahyeah.cli_new import YeahYeahContext
 from yeahyeah.persistence import JSONSettingsFile
 
 

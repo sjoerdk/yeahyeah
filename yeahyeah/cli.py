@@ -10,11 +10,10 @@ $ yeahyeah
 
 """
 from clockify_plugin.core import ClockifyPlugin
-from yeahyeah.core_new import YeahYeahContext
+from yeahyeah.core_new import YeahYeah
+from yeahyeah.cli_new import YeahYeahContext
 from yeahyeah.plugins_old.path_items import PathItemPlugin
 from yeahyeah.plugins_old.url_patterns import UrlPatternsPlugin
-from yeahyeah.core import YeahYeah
-
 
 jj = YeahYeah()
 context = YeahYeahContext(settings_path=jj.configuration_path)

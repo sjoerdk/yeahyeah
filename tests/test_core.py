@@ -4,7 +4,7 @@
 from click.testing import CliRunner
 
 from yeahyeah import cli
-from yeahyeah.core import YeahYeah
+from yeahyeah.core_new import YeahYeah
 from yeahyeah.plugins_old.url_patterns import UrlPatternsPlugin
 
 

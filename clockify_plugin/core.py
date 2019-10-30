@@ -1,7 +1,7 @@
 
 from clockify_plugin.cli import main, edit_settings
-from yeahyeah.cli_new import YeahYeahPlugin
-from yeahyeah.core_new import YeahYeahContext
+from yeahyeah.core_new import YeahYeahPlugin
+from yeahyeah.cli_new import YeahYeahContext
 
 
 class ClockifyPlugin(YeahYeahPlugin):

@@ -6,7 +6,7 @@ from click.testing import CliRunner
 
 from yeahyeah.plugins_old.path_items import PathItemPlugin
 from tests import RESOURCE_PATH
-from yeahyeah.core import YeahYeah
+from yeahyeah.core_new import YeahYeah
 
 
 def test_path_item_plugin(path_item_list):

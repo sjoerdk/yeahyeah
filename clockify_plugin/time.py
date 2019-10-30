@@ -15,4 +15,3 @@ def now_local():
 def as_local(datetime_in):
     return ClockifyDatetime(datetime_in).datetime_local
 
-git st
