@@ -1,10 +1,7 @@
-import click
 
 from clockify_plugin.cli import main, edit_settings
-from clockify_plugin.context import default_settings_file_name, default_context
 from yeahyeah.cli_new import YeahYeahPlugin
 from yeahyeah.core_new import YeahYeahContext
-from yeahyeah.persistence import JSONSettingsFile
 
 
 class ClockifyPlugin(YeahYeahPlugin):
@@ -20,11 +17,7 @@ class ClockifyPlugin(YeahYeahPlugin):
         context: YeahYeahContext
             Context of the root yeahyeah module
         """
-        settings_file = JSONSettingsFile(path=context.settings_path / default_settings_file_name)
-        if not settings_file.exists():
-            click.echo(f"Settings file not found. Writing default settings to {settings_file.path}")
-            settings_file.save(dict_in=default_context.to_dict())
-        self.settings = settings_file.load()
+        pass
 
     def get_commands(self):
         """

@@ -6,6 +6,7 @@ from clockify_plugin.context import ClockifyPluginContext, pass_clockify_context
 from clockify_plugin.context import default_settings_file_name
 from clockify_plugin.decorators import handle_clockify_exceptions
 from clockify_plugin.parameters import TIME
+from clockify_plugin.time import as_local, now_local
 from yeahyeah.core_new import YeahYeahContext, pass_yeahyeah_context
 from yeahyeah.persistence import JSONSettingsFile
 
@@ -14,7 +15,7 @@ from yeahyeah.persistence import JSONSettingsFile
 @click.pass_context
 @pass_yeahyeah_context
 def main(context: YeahYeahContext, ctx):
-    """write log"""
+    """write to clockify log"""
     settings_file = JSONSettingsFile(path=context.settings_path / default_settings_file_name)
     if not settings_file.exists():
         click.echo(f"Settings file not found. Writing default settings to {settings_file.path}")
@@ -40,16 +41,47 @@ def status(context: ClockifyPluginContext):
     default=0,
     help="Time (HH:MM) or time increment(+/-MM or +/-HH:MM)",
 )
+@handle_clockify_exceptions
 def add(context: ClockifyPluginContext, message, project, time):
     """add log message"""
     if not message:
-        click.echo("Log message may not be empty")
-        return
+        raise click.BadParameter("Log message may not be empty")
+    else:
+        message = " ".join(message)
     if not time:
-        time = datetime.datetime.utcnow()
+        time = now_local()
+    if project:
+        project_obj = find_project(context.session.get_projects(), project)
+    else:
+        project_obj = None
+
     log_start = time
-    #self.clockify_session.add_time_entry()
-    click.echo(f"Adding {' '.join(message)} at {log_start} UTC to project {project}")
+    click.echo(f"Adding {message} at {as_local(log_start)} to project {project}")
+    context.session.add_time_entry(start_time=time, description=message, project=project_obj)
+
+
+def find_project(project_list, project_name_part):
+    """Try to match project_name to one of the projects found in context. Returns the first project that starts with
+    project_name
+
+    Parameters
+    ----------
+    project_list: List[Project]
+        all projects to search in
+    project_name_part: str
+        pro
+
+    Raises
+    ------
+    click.BadParameter
+        When project can not be found
+    """
+    for project in project_list:
+        if project.name.lower().startswith(project_name_part.lower()):
+            return project
+    msg = f'Could not find project starting with "{project_name_part}". ' \
+          f'Options: {", ".join([x.name for x in project_list])}'
+    raise click.BadParameter(msg)
 
 
 @click.command()
@@ -75,9 +107,14 @@ def stop(context: ClockifyPluginContext, time):
 
 @click.command()
 @pass_clockify_context
+@handle_clockify_exceptions
 def projects(context: ClockifyPluginContext):
     """Lists available projects for current clockify user"""
-    click.echo(f"Projects")
+    projects = context.session.get_projects()
+    if not projects:
+        click.echo(f"No projects found")
+    else:
+        click.echo("\n".join([str(x) for x in projects]))
 
 
 for func in [status, add, stop, projects]:

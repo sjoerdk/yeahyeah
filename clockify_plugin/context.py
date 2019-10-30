@@ -1,6 +1,7 @@
 """Context that gets passed around to this plugins' functions
 
 """
+import datetime
 
 import click
 from clockifyclient.api import APIServer
@@ -8,6 +9,9 @@ from clockifyclient.client import APISession
 
 
 class ClockifyPluginContext:
+    """Context that gets passed to each clockify_plugin function
+
+    """
     def __init__(self, api_url, api_key):
         self.api_url = api_url
         self.api_key = api_key
