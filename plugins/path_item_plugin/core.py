@@ -3,7 +3,8 @@ import subprocess
 
 import click
 
-from yeahyeah.core import YeahYeahPlugin, YeahYeahContext
+from yeahyeah.core import YeahYeahPlugin
+from yeahyeah.context import YeahYeahContext
 from yeahyeah.objects import SerialisableMenuItem, MenuItemList
 
 default_settings_file_name = 'path_items.yaml'
@@ -85,7 +86,7 @@ class PathItemPlugin(YeahYeahPlugin):
     @classmethod
     def init_from_context(cls, context: YeahYeahContext):
         return cls.__from_file_path__(context.settings_path / default_settings_file_name)
-        
+
     @classmethod
     def __from_file_path__(cls, config_file_path):
         cls.assert_config_file(config_file_path)

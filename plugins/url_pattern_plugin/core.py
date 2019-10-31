@@ -3,7 +3,8 @@ import webbrowser
 
 import click
 
-from yeahyeah.core import YeahYeahPlugin, YeahYeahContext
+from yeahyeah.core import YeahYeahPlugin
+from yeahyeah.context import YeahYeahContext
 from yeahyeah.objects import SerialisableMenuItem, MenuItemList
 
 

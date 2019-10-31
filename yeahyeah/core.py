@@ -1,20 +1,8 @@
 
 import click
 
-
-class YeahYeahContext:
-    """Core yeahyeah context object. This gets passed to all plugins on init() and to any method call
-
-    """
-    def __init__(self, settings_path):
-        """
-
-        Parameters
-        ----------
-        settings_path: Pathlike
-            Path to the folder where any context can be stored
-        """
-        self.settings_path = settings_path
+from yeahyeah.context import YeahYeahContext
+from yeahyeah.decorators import pass_yeahyeah_context
 
 
 class YeahYeah:
@@ -68,6 +56,13 @@ class YeahYeah:
         self.admin_cli.add_command(plugin_admin)
 
     def get_root_cli(self):
+        """Create yeahyeah root group
+
+        Notes
+        -----
+        Notice injection of self. Together with status() This is the only method allowed to do so. All other methods
+        have to make do with just a YeahYeahContext object
+        """
         @click.group()
         @click.pass_context
         def root_cli(ctx):
@@ -84,13 +79,41 @@ class YeahYeah:
             """Admin options for yeahyeah and plugins"""
             pass
 
-        admin_group.add_command(self.enable_autocompletion)
+        @click.group(name='yeahyeah')
+        def yeahyeah_group():
+            """Admin options for yeahyeah itself"""
+            pass
+
+        admin_group.add_command(yeahyeah_group)
+        yeahyeah_group.add_command(self.enable_autocompletion)
+        yeahyeah_group.add_command(self.get_status_command())
+
         return admin_group
+
+    def get_status_command(self):
+        """Create the command to show this yeahyeah instance's status.
+
+        Notes
+        -----
+        like main(), status command also gets this slightly smelly access to self. This makes it possible
+        for the command to inspect all installed plugins etc.
+        """
+
+        @click.command()
+        @pass_yeahyeah_context
+        def status(ctx: YeahYeahContext):
+            """Configuration and status"""
+            click.echo("YeahYeah launch status:")
+            click.echo(f"settings folder: '{self.configuration_path}'")
+            click.echo(f"{len(self.plugins)} plugins activated: [{', '.join([x.slug for x in self.plugins])}]")
+            click.echo(f"{len(self.root_cli.commands)} commands in main menu")
+
+        return status
 
     @staticmethod
     @click.command()
     def enable_autocompletion():
-        """Print information on how to enable command auto-completion"""
+        """Instructions to enable auto-completion"""
         click.echo('Execute the following line in a terminal to enable auto-completion for that terminal only:\n'
                    '\n'
                    '    $ eval "$(_JJ_COMPLETE=source jj)"\n'
@@ -115,6 +138,9 @@ class YeahYeahPlugin:
             Context of the root yeahyeah module
         """
         raise NotImplemented()
+
+    def __str__(self):
+        return f"YeahYeah plugin '{self.slug}'"
 
     def get_commands(self):
         """All Commands for this plugin

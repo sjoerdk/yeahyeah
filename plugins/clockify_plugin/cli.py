@@ -13,7 +13,7 @@ from plugins.clockify_plugin.decorators import handle_clockify_exceptions
 from plugins.clockify_plugin.parameters import TIME
 from plugins.clockify_plugin.time import as_local, now_local
 from yeahyeah.decorators import pass_yeahyeah_context
-from yeahyeah.core import YeahYeahContext
+from yeahyeah.context import YeahYeahContext
 from yeahyeah.persistence import JSONSettingsFile
 
 
