@@ -1,15 +1,13 @@
-from unittest import mock
 from unittest.mock import Mock
 
 import click
 import pytest
-from click.testing import CliRunner
 from clockifyclient.client import APISession
 from clockifyclient.exceptions import ClockifyClientException
 from clockifyclient.models import Project
 
-from clockify_plugin.cli import main, stop, projects, add, find_project
-from clockify_plugin.context import ClockifyPluginContext
+from plugins.clockify_plugin.cli import main, stop, projects, add, find_project
+from plugins.clockify_plugin.context import ClockifyPluginContext
 from tests.conftest import MockContextCliRunner
 from yeahyeah.core import YeahYeahContext
 

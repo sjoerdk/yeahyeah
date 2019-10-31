@@ -6,7 +6,7 @@ import re
 
 import click
 
-from clockify_plugin.time import now_local
+from plugins.clockify_plugin.time import now_local
 
 
 class TimeParamType(click.ParamType):

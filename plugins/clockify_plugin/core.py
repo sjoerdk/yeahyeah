@@ -1,5 +1,5 @@
 
-from clockify_plugin.cli import main, edit_settings
+from plugins.clockify_plugin.cli import main, edit_settings
 from yeahyeah.core import YeahYeahPlugin, YeahYeahContext
 
 

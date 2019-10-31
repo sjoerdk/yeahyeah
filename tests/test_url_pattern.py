@@ -8,7 +8,7 @@ import pytest
 from click.testing import CliRunner
 
 from yeahyeah.objects import YeahYeahMenuItem
-from yeahyeah.plugins_old.url_patterns import (
+from plugins.url_pattern_plugin.core import (
     UrlPattern,
     URLPatternList,
     WildCardUrlPattern,

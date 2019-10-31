@@ -4,7 +4,7 @@ import click
 import dateutil
 import pytest
 
-from clockify_plugin.parameters import TIME
+from plugins.clockify_plugin.parameters import TIME
 
 
 def to_time_string(x):
@@ -16,7 +16,7 @@ def to_time_string(x):
 @pytest.fixture()
 def fake_now_time(monkeypatch):
     monkeypatch.setattr(
-        "clockify_plugin.parameters.now_local",
+        "plugins.clockify_plugin.parameters.now_local",
         lambda: datetime(
             year=2010,
             month=1,

@@ -84,15 +84,8 @@ class PathItemPlugin(YeahYeahPlugin):
 
     @classmethod
     def init_from_context(cls, context: YeahYeahContext):
-        settings_file_path = context.settings_path / default_settings_file_name
-        cls.assert_config_file(settings_file_path)
-        with open(settings_file_path, "r") as f:
-            item_list = PathItemList.load(f)
-
-        obj = cls(item_list=item_list)
-        obj.config_file_path = settings_file_path
-        return obj
-
+        return cls.__from_file_path__(context.settings_path / default_settings_file_name)
+        
     @classmethod
     def __from_file_path__(cls, config_file_path):
         cls.assert_config_file(config_file_path)
