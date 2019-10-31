@@ -66,7 +66,7 @@ def add(context: ClockifyPluginContext, message, project, time):
         project_obj = None
 
     log_start = time
-    click.echo(f"Adding {message} at {as_local(log_start)} to project {project}")
+    click.echo(f"Adding {message} at {as_local(log_start)} to project {project_obj}")
     context.session.add_time_entry(
         start_time=time, description=message, project=project_obj
     )
