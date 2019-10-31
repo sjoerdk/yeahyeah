@@ -1,7 +1,6 @@
 
 from clockify_plugin.cli import main, edit_settings
-from yeahyeah.core_new import YeahYeahPlugin
-from yeahyeah.cli_new import YeahYeahContext
+from yeahyeah.core import YeahYeahPlugin, YeahYeahContext
 
 
 class ClockifyPlugin(YeahYeahPlugin):
@@ -14,7 +13,7 @@ class ClockifyPlugin(YeahYeahPlugin):
 
         Parameters
         ----------
-        context: YeahYeahContext
+        context: yeahyeah.core.YeahYeahContext
             Context of the root yeahyeah module
         """
         pass

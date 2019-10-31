@@ -7,7 +7,7 @@ from yeahyeah.exceptions import YeahYeahException
 
 
 class SettingsFile:
-    """Base class for a settings file that can be loaded and saved"""
+    """Base class for a context file that can be loaded and saved"""
 
     def __init__(self, path):
         """

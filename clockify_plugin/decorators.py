@@ -1,6 +1,6 @@
 from functools import wraps
 
-from click import ClickException
+from click.exceptions import ClickException
 from clockifyclient.exceptions import ClockifyClientException
 
 

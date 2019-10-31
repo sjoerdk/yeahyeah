@@ -8,7 +8,7 @@ import pytest
 from click.testing import CliRunner
 
 from yeahyeah.plugins_old.path_items import PathItem, PathItemList, PathItemPlugin
-from yeahyeah.core_new import YeahYeah
+from yeahyeah.core import YeahYeah
 from yeahyeah.plugins_old.url_patterns import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 
@@ -45,10 +45,11 @@ def path_item_list():
         )
     ])
 
+
 @pytest.fixture()
-def yeahyeah_instance(url_pattern_list, path_item_list):
+def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
     """An instance of the yeahyeah launch manager with some default plugins_old and commands"""
-    yeahyeah = YeahYeah()
+    yeahyeah = YeahYeah(configuration_path=tmpdir)
     yeahyeah.add_plugin(UrlPatternsPlugin(pattern_list=url_pattern_list))
     yeahyeah.add_plugin(PathItemPlugin(item_list=path_item_list))
 

@@ -2,13 +2,18 @@ import datetime
 
 import click
 
-from clockify_plugin.context import ClockifyPluginContext, pass_clockify_context, default_context
-from clockify_plugin.context import default_settings_file_name
+from clockify_plugin.context import (
+    ClockifyPluginContext,
+    pass_clockify_context,
+    default_context,
+    default_settings_file_name,
+)
+
 from clockify_plugin.decorators import handle_clockify_exceptions
 from clockify_plugin.parameters import TIME
 from clockify_plugin.time import as_local, now_local
 from yeahyeah.decorators import pass_yeahyeah_context
-from yeahyeah.cli_new import YeahYeahContext
+from yeahyeah.core import YeahYeahContext
 from yeahyeah.persistence import JSONSettingsFile
 
 
@@ -17,9 +22,13 @@ from yeahyeah.persistence import JSONSettingsFile
 @pass_yeahyeah_context
 def main(context: YeahYeahContext, ctx):
     """write to clockify log"""
-    settings_file = JSONSettingsFile(path=context.settings_path / default_settings_file_name)
+    settings_file = JSONSettingsFile(
+        path=context.settings_path / default_settings_file_name
+    )
     if not settings_file.exists():
-        click.echo(f"Settings file not found. Writing default settings to {settings_file.path}")
+        click.echo(
+            f"Settings file not found. Writing default context to {settings_file.path}"
+        )
         settings_file.save(dict_in=default_context.to_dict())
     ctx.obj = ClockifyPluginContext.init_from_dict(settings_file.load())
 
@@ -58,7 +67,9 @@ def add(context: ClockifyPluginContext, message, project, time):
 
     log_start = time
     click.echo(f"Adding {message} at {as_local(log_start)} to project {project}")
-    context.session.add_time_entry(start_time=time, description=message, project=project_obj)
+    context.session.add_time_entry(
+        start_time=time, description=message, project=project_obj
+    )
 
 
 def find_project(project_list, project_name_part):
@@ -80,8 +91,10 @@ def find_project(project_list, project_name_part):
     for project in project_list:
         if project.name.lower().startswith(project_name_part.lower()):
             return project
-    msg = f'Could not find project starting with "{project_name_part}". ' \
-          f'Options: {", ".join([x.name for x in project_list])}'
+    msg = (
+        f'Could not find project starting with "{project_name_part}". '
+        f'Options: {", ".join([x.name for x in project_list])}'
+    )
     raise click.BadParameter(msg)
 
 
@@ -125,5 +138,5 @@ for func in [status, add, stop, projects]:
 @click.command()
 @pass_yeahyeah_context
 def edit_settings(context: YeahYeahContext):
-    """Open settings file for editing"""
+    """Open context file for editing"""
     click.launch(str(context.settings_path / default_settings_file_name))

@@ -1,6 +1,6 @@
 import click
 
-from yeahyeah.cli_new import YeahYeahContext
+from yeahyeah.core import YeahYeahContext
 
 
 def receives_yeahyeah_context(**kwargs):

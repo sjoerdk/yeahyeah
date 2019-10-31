@@ -6,12 +6,12 @@ from click.testing import CliRunner
 
 from yeahyeah.plugins_old.path_items import PathItemPlugin
 from tests import RESOURCE_PATH
-from yeahyeah.core_new import YeahYeah
+from yeahyeah.core import YeahYeah
 
 
-def test_path_item_plugin(path_item_list):
+def test_path_item_plugin(path_item_list, tmpdir):
 
-    yeahyeah = YeahYeah()
+    yeahyeah = YeahYeah(configuration_path=tmpdir)
     plugin = PathItemPlugin(item_list=path_item_list)
     yeahyeah.add_plugin(plugin)
 

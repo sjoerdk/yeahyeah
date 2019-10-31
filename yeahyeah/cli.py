@@ -9,17 +9,17 @@ $ eval "$(_JJ_COMPLETE=source jj)"
 $ yeahyeah
 
 """
+from pathlib import Path
+
 from clockify_plugin.core import ClockifyPlugin
-from yeahyeah.core_new import YeahYeah
-from yeahyeah.cli_new import YeahYeahContext
+from yeahyeah.core import YeahYeah
 from yeahyeah.plugins_old.path_items import PathItemPlugin
 from yeahyeah.plugins_old.url_patterns import UrlPatternsPlugin
 
-jj = YeahYeah()
-context = YeahYeahContext(settings_path=jj.configuration_path)
+jj = YeahYeah(configuration_path=Path.home() / ".config" / "yeahyeah")
 
-jj.add_plugin(ClockifyPlugin(context=context))
-jj.add_plugin(PathItemPlugin.init_from_context(context=context))
-jj.add_plugin(UrlPatternsPlugin.init_from_context(context=context))
+jj.add_plugin(ClockifyPlugin(context=jj.context))
+jj.add_plugin(PathItemPlugin.init_from_context(context=jj.context))
+jj.add_plugin(UrlPatternsPlugin.init_from_context(context=jj.context))
 
 yeahyeah = jj.root_cli   # base click command line entry point

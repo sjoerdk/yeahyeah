@@ -3,8 +3,7 @@ import subprocess
 
 import click
 
-from yeahyeah.core_new import YeahYeahPlugin
-from yeahyeah.cli_new import YeahYeahContext
+from yeahyeah.core import YeahYeahPlugin, YeahYeahContext
 from yeahyeah.objects import SerialisableMenuItem, MenuItemList
 
 default_settings_file_name = 'path_items.yaml'
