@@ -15,7 +15,7 @@ requirements = ['Click>=6.0', 'pyyaml', 'clockifyclient', 'python-dateutil']
 
 setup_requirements = ['pytest-runner']
 
-test_requirements = ['pytest', 'click']
+test_requirements = ['pytest', 'click', 'clockifyclient', 'python-dateutil']
 
 setup(
     author='Sjoerd Kerkstra',
