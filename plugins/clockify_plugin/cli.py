@@ -124,11 +124,11 @@ def stop(context: ClockifyPluginContext, time):
 @handle_clockify_exceptions
 def projects(context: ClockifyPluginContext):
     """Lists available projects for current clockify user"""
-    projects = context.session.get_projects()
-    if not projects:
+    projects_in = context.session.get_projects()
+    if not projects_in:
         click.echo(f"No projects found")
     else:
-        click.echo("\n".join([str(x) for x in projects]))
+        click.echo("\n".join([str(x) for x in projects_in]))
 
 
 for func in [status, add, stop, projects]:
