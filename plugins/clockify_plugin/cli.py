@@ -111,7 +111,7 @@ def find_project(project_list, project_name_part):
 def stop(context: ClockifyPluginContext, time):
     """stop any active logging stopwatch"""
     if not time:
-        time = datetime.datetime.utcnow()
+        time = now_local()
     result = context.session.stop_timer(time)
     if result:
         click.echo(f"stopped {result}")
