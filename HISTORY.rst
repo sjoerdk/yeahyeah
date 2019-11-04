@@ -12,3 +12,10 @@ History
 ------------------
 
 * Removed windowraiser plugin. Too UI dependent, simpler scripts work better.
+
+0.2.0 (2019-10-31)
+------------------
+
+* Added clockify plugin
+* Rewrote much to use click context objects. This makes command interleaving and inheriting contexts much clearer
+* Wrote some docs for creating a plugin

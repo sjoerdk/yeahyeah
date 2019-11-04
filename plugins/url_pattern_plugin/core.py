@@ -3,7 +3,12 @@ import webbrowser
 
 import click
 
-from yeahyeah.core import YeahYeahPlugin, SerialisableMenuItem, MenuItemList
+from yeahyeah.core import YeahYeahPlugin
+from yeahyeah.context import YeahYeahContext
+from yeahyeah.objects import SerialisableMenuItem, MenuItemList
+
+
+default_settings_file_name = 'url_patterns.yaml'
 
 
 class UrlPattern(SerialisableMenuItem):
@@ -51,7 +56,7 @@ class UrlPattern(SerialisableMenuItem):
         def the_command(**kwargs):
             url = self.pattern.format(**kwargs)
             click.echo(url)
-            open_url(url)
+            click.launch(url)
 
         for argument_name in arguments:
             the_command = click.argument(argument_name, type=click.STRING)(the_command)
@@ -117,6 +122,10 @@ def open_url(url):
 
 
 class UrlPatternsPlugin(YeahYeahPlugin):
+
+    slug = "url_patterns"
+    short_slug = 'url'
+
     def __init__(self, pattern_list):
         """Plugin that holds URL path_items
 
@@ -125,9 +134,19 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         pattern_list: URLPatternList
 
         """
-        super().__init__(slug="url_patterns", short_slug='url')
         self.pattern_list = pattern_list
         self.config_file_path = None
+
+    @classmethod
+    def init_from_context(cls, context: YeahYeahContext):
+        settings_file_path = context.settings_path / default_settings_file_name
+        cls.assert_config_file(settings_file_path)
+        with open(settings_file_path, "r") as f:
+            pattern_list = URLPatternList.load(f)
+
+        obj = cls(pattern_list=pattern_list)
+        obj.config_file_path = settings_file_path
+        return obj
 
     @classmethod
     def __from_file_path__(cls, config_file_path):
@@ -173,14 +192,20 @@ class UrlPatternsPlugin(YeahYeahPlugin):
                 f"UrlPattern config file {config_file_path} did not exist. Creating with default contents.."
             )
 
-    def get_menu_items(self):
+    def get_commands(self):
         """
 
         Returns
         -------
-        List[UrlPattern]
+        List[click.Command]
         """
-        return self.pattern_list.data
+        commands = []
+        for item in self.pattern_list.data:
+            command = item.to_click_command()
+            command.help += f" ({self.short_slug})"
+            commands.append(command)
+
+        return commands
 
     def get_admin_commands(self):
         """
@@ -196,7 +221,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         def status():
             """Print some info for this plugin"""
             status_str = f"UrlPatternsPlugin:\n" \
-                         f"{len(self.get_menu_items())} path_items in plugin\n"
+                         f"{len(self.get_commands())} path_items in plugin\n"
             if self.config_file_path:
                 status_str += f"Config file: {self.config_file_path}"
             click.echo(status_str)
