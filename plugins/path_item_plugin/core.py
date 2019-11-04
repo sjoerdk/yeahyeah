@@ -3,7 +3,11 @@ import subprocess
 
 import click
 
-from yeahyeah.core import YeahYeahPlugin, MenuItemList, SerialisableMenuItem
+from yeahyeah.core import YeahYeahPlugin
+from yeahyeah.context import YeahYeahContext
+from yeahyeah.objects import SerialisableMenuItem, MenuItemList
+
+default_settings_file_name = 'path_items.yaml'
 
 
 class PathItem(SerialisableMenuItem):
@@ -28,6 +32,10 @@ class PathItem(SerialisableMenuItem):
 
     def to_click_command(self):
         """This url pattern as a click command that can be added with add_command()
+
+        Returns
+        -------
+        click.command
         """
 
         @click.command(name=self.name, help=self.help_text)
@@ -38,7 +46,6 @@ class PathItem(SerialisableMenuItem):
                 open_terminal(self.path)
 
         return the_command
-
 
     @staticmethod
     def from_dict(dict_in):
@@ -61,6 +68,10 @@ class PathItemList(MenuItemList):
 
 
 class PathItemPlugin(YeahYeahPlugin):
+
+    slug = "path_items"
+    short_slug = 'path'
+
     def __init__(self, item_list):
         """Plugin that holds PathItems
 
@@ -69,9 +80,12 @@ class PathItemPlugin(YeahYeahPlugin):
         item_list: PathItemList
 
         """
-        super().__init__(slug="path_items", short_slug='path')
         self.item_list = item_list
         self.config_file_path = None
+
+    @classmethod
+    def init_from_context(cls, context: YeahYeahContext):
+        return cls.__from_file_path__(context.settings_path / default_settings_file_name)
 
     @classmethod
     def __from_file_path__(cls, config_file_path):
@@ -114,14 +128,20 @@ class PathItemPlugin(YeahYeahPlugin):
                 f"PathItem config file {config_file_path} did not exist. Creating with default contents.."
             )
 
-    def get_menu_items(self):
+    def get_commands(self):
         """
 
         Returns
         -------
-        List[UrlPattern]
+        List[click.Command]
         """
-        return self.item_list
+        commands = []
+        for item in self.item_list:
+            command = item.to_click_command()
+            command.help += f" ({self.short_slug})"
+            commands.append(command)
+
+        return commands
 
     def get_admin_commands(self):
         """
@@ -137,7 +157,7 @@ class PathItemPlugin(YeahYeahPlugin):
         def status():
             """Print some info for this plugin"""
             status_str = f"PathItemPlugin:\n" \
-                         f"{len(self.get_menu_items())} path items in plugin\n"
+                         f"{len(self.get_commands())} path items in plugin\n"
             if self.config_file_path:
                 status_str += f"Config file: {self.config_file_path}"
             click.echo(status_str)
@@ -175,8 +195,6 @@ class PathItemPlugin(YeahYeahPlugin):
 
 def open_terminal(path):
     """Open a terminal at the given path.
-
-    Opens Konsole on linux, cmd on windows
 
     Parameters
     ----------

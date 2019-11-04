@@ -4,18 +4,17 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from yeahyeah.plugins.path_items import PathItemPlugin
-from tests import RESOURCE_PATH
+from plugins.path_item_plugin.core import PathItemPlugin
 from yeahyeah.core import YeahYeah
 
 
-def test_path_item_plugin(path_item_list):
+def test_path_item_plugin(path_item_list, tmpdir):
 
-    yeahyeah = YeahYeah()
+    yeahyeah = YeahYeah(configuration_path=tmpdir)
     plugin = PathItemPlugin(item_list=path_item_list)
     yeahyeah.add_plugin(plugin)
 
-    assert len(plugin.get_menu_items()) == 2
+    assert len(plugin.get_commands()) == 2
 
 
 def test_path_item_plugin_no_file(path_item_list, tmpdir):

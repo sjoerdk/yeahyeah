@@ -11,11 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', 'pyyaml']
+requirements = ['Click>=6.0', 'pyyaml', 'clockifyclient', 'python-dateutil']
 
 setup_requirements = ['pytest-runner']
 
-test_requirements = ['pytest', 'click']
+test_requirements = ['pytest', 'click', 'clockifyclient', 'python-dateutil']
 
 setup(
     author='Sjoerd Kerkstra',
@@ -37,11 +37,11 @@ setup(
     include_package_data=True,
     keywords='yeahyeah',
     name='yeahyeah',
-    packages=find_packages(include=['yeahyeah', 'yeahyeah.plugins']),
+    packages=find_packages(include=['yeahyeah', 'yeahyeah.plugins_old']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/sjoerdk/yeahyeah',
-    version='0.1.11',
+    version='0.2.3',
     zip_safe=False,
 )
