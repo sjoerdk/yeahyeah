@@ -1,4 +1,3 @@
-
 from yeahyeah_plugins.clockify_plugin.cli import main, edit_settings
 from yeahyeah.core import YeahYeahPlugin
 from yeahyeah.context import YeahYeahContext
@@ -40,4 +39,3 @@ class ClockifyPlugin(YeahYeahPlugin):
         """
 
         return [edit_settings]
-

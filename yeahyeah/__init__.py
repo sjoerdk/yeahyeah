@@ -3,5 +3,5 @@
 """Top-level package for yeahyeah."""
 
 __author__ = """Sjoerd Kerkstra"""
-__email__ = 'w.s.kerkstra@protonmail.com'
-__version__ = '0.2.4'
+__email__ = "w.s.kerkstra@protonmail.com"
+__version__ = "0.2.4"

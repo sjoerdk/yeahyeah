@@ -25,7 +25,7 @@ def fake_now_time(monkeypatch):
             minute=0,
             second=1,
             microsecond=0,
-            tzinfo=dateutil.tz.gettz('Asia/Irkutsk'),
+            tzinfo=dateutil.tz.gettz("Asia/Irkutsk"),
         ),
     )
 

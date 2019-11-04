@@ -63,11 +63,13 @@ class JSONSettingsFile(SettingsFile):
             The loaded json
 
         """
-        with open(self.path, 'r') as f:
+        with open(self.path, "r") as f:
             try:
                 return json.loads(f.read())
             except json.decoder.JSONDecodeError as e:
-                raise YeahYeahPersistenceException(f'Error trying to decode contents of {self.path}: {e}')
+                raise YeahYeahPersistenceException(
+                    f"Error trying to decode contents of {self.path}: {e}"
+                )
 
     def save(self, dict_in):
         """
@@ -88,11 +90,13 @@ class JSONSettingsFile(SettingsFile):
             The data to save in json format
 
         """
-        with open(self.path, 'w') as f:
+        with open(self.path, "w") as f:
             try:
                 f.write(json.dumps(dict_in))
             except TypeError as e:
-                raise YeahYeahPersistenceException(f'Error trying to save dict {dict_in} to {self.path}: {e}')
+                raise YeahYeahPersistenceException(
+                    f"Error trying to save dict {dict_in} to {self.path}: {e}"
+                )
 
     def exists(self):
         return self.path.exists()

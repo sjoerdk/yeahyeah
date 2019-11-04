@@ -8,7 +8,7 @@ from yeahyeah.context import YeahYeahContext
 from yeahyeah.objects import SerialisableMenuItem, MenuItemList
 
 
-default_settings_file_name = 'url_patterns.yaml'
+default_settings_file_name = "url_patterns.yaml"
 
 
 class UrlPattern(SerialisableMenuItem):
@@ -22,7 +22,7 @@ class UrlPattern(SerialisableMenuItem):
         return f"URLPattern {self.name}:{self.pattern}"
 
     def get_parameters(self):
-        return {'pattern': self.pattern}
+        return {"pattern": self.pattern}
 
     @property
     def help_text(self):
@@ -124,7 +124,7 @@ def open_url(url):
 class UrlPatternsPlugin(YeahYeahPlugin):
 
     slug = "url_patterns"
-    short_slug = 'url'
+    short_slug = "url"
 
     def __init__(self, pattern_list):
         """Plugin that holds URL path_items
@@ -161,7 +161,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
     def save(self):
         """Save current pattern list to disk if possible"""
         if self.config_file_path:
-            with open(self.config_file_path, 'w') as f:
+            with open(self.config_file_path, "w") as f:
                 self.pattern_list.save(file=f)
 
     @staticmethod
@@ -220,15 +220,17 @@ class UrlPatternsPlugin(YeahYeahPlugin):
         @click.command()
         def status():
             """Print some info for this plugin"""
-            status_str = f"UrlPatternsPlugin:\n" \
-                         f"{len(self.get_commands())} path_items in plugin\n"
+            status_str = (
+                f"UrlPatternsPlugin:\n"
+                f"{len(self.get_commands())} path_items in plugin\n"
+            )
             if self.config_file_path:
                 status_str += f"Config file: {self.config_file_path}"
             click.echo(status_str)
 
         @click.command()
-        @click.argument('keyword')
-        @click.argument('pattern')
+        @click.argument("keyword")
+        @click.argument("pattern")
         def add(keyword, pattern):
             """Add a new url pattern"""
             pattern = UrlPattern(name=keyword, pattern=pattern)
@@ -237,7 +239,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
             self.save()
 
         @click.command()
-        @click.argument('keyword')
+        @click.argument("keyword")
         def remove(keyword):
             """Remove an existing url pattern"""
             to_remove = [x for x in self.pattern_list if x.name == keyword]

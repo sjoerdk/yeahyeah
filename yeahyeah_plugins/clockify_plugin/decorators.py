@@ -15,7 +15,3 @@ def handle_clockify_exceptions(func):
             raise ClickException(f"Error in Clockify API: {e}")
 
     return wrapper
-
-
-
-

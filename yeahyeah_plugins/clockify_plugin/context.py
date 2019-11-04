@@ -12,11 +12,11 @@ class ClockifyPluginContext:
     """Context that gets passed to each clockify_plugin function
 
     """
+
     def __init__(self, api_url, api_key):
         self.api_url = api_url
         self.api_key = api_key
-        self.session = APISession(api_server=APIServer(api_url),
-                                  api_key=api_key)
+        self.session = APISession(api_server=APIServer(api_url), api_key=api_key)
 
     @classmethod
     def init_from_dict(cls, dict_in):
@@ -27,5 +27,7 @@ class ClockifyPluginContext:
 
 
 pass_clockify_context = click.make_pass_decorator(ClockifyPluginContext)
-default_context = ClockifyPluginContext(api_key='<clockify API key>', api_url='<clockify API url>')
-default_settings_file_name = 'clockify.json'
+default_context = ClockifyPluginContext(
+    api_key="<clockify API key>", api_url="<clockify API url>"
+)
+default_settings_file_name = "clockify.json"

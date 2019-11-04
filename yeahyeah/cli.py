@@ -22,4 +22,4 @@ jj.add_plugin(ClockifyPlugin(context=jj.context))
 jj.add_plugin(PathItemPlugin.init_from_context(context=jj.context))
 jj.add_plugin(UrlPatternsPlugin.init_from_context(context=jj.context))
 
-yeahyeah = jj.root_cli   # base click command line entry point
+yeahyeah = jj.root_cli  # base click command line entry point

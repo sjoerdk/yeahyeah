@@ -7,7 +7,7 @@ from yeahyeah.core import YeahYeahPlugin
 from yeahyeah.context import YeahYeahContext
 from yeahyeah.objects import SerialisableMenuItem, MenuItemList
 
-default_settings_file_name = 'path_items.yaml'
+default_settings_file_name = "path_items.yaml"
 
 
 class PathItem(SerialisableMenuItem):
@@ -21,7 +21,7 @@ class PathItem(SerialisableMenuItem):
         return f"PathItem {self.name}:{self.path}"
 
     def get_parameters(self):
-        return {'path': self.path}
+        return {"path": self.path}
 
     @property
     def help_text(self):
@@ -39,7 +39,7 @@ class PathItem(SerialisableMenuItem):
         """
 
         @click.command(name=self.name, help=self.help_text)
-        @click.option('--print-only', '-p', is_flag=True)
+        @click.option("--print-only", "-p", is_flag=True)
         def the_command(print_only):
             click.echo(self.path)
             if not print_only:
@@ -70,7 +70,7 @@ class PathItemList(MenuItemList):
 class PathItemPlugin(YeahYeahPlugin):
 
     slug = "path_items"
-    short_slug = 'path'
+    short_slug = "path"
 
     def __init__(self, item_list):
         """Plugin that holds PathItems
@@ -85,7 +85,9 @@ class PathItemPlugin(YeahYeahPlugin):
 
     @classmethod
     def init_from_context(cls, context: YeahYeahContext):
-        return cls.__from_file_path__(context.settings_path / default_settings_file_name)
+        return cls.__from_file_path__(
+            context.settings_path / default_settings_file_name
+        )
 
     @classmethod
     def __from_file_path__(cls, config_file_path):
@@ -100,7 +102,7 @@ class PathItemPlugin(YeahYeahPlugin):
     def save(self):
         """Save current list to disk if possible"""
         if self.config_file_path:
-            with open(self.config_file_path, 'w') as f:
+            with open(self.config_file_path, "w") as f:
                 self.item_list.save(file=f)
 
     @staticmethod
@@ -121,7 +123,7 @@ class PathItemPlugin(YeahYeahPlugin):
                         name="external_disk",
                         path="/mnt/some_mount/user/something",
                         help_text="(Example) Open that external disk",
-                    )
+                    ),
                 ]
                 PathItemList(items=example_patterns).save(f)
             click.echo(
@@ -156,15 +158,17 @@ class PathItemPlugin(YeahYeahPlugin):
         @click.command()
         def status():
             """Print some info for this plugin"""
-            status_str = f"PathItemPlugin:\n" \
-                         f"{len(self.get_commands())} path items in plugin\n"
+            status_str = (
+                f"PathItemPlugin:\n"
+                f"{len(self.get_commands())} path items in plugin\n"
+            )
             if self.config_file_path:
                 status_str += f"Config file: {self.config_file_path}"
             click.echo(status_str)
 
         @click.command()
-        @click.argument('keyword')
-        @click.argument('path')
+        @click.argument("keyword")
+        @click.argument("path")
         def add(keyword, path):
             """Add a new url pattern"""
             pattern = PathItem(name=keyword, path=path)
@@ -173,7 +177,7 @@ class PathItemPlugin(YeahYeahPlugin):
             self.save()
 
         @click.command()
-        @click.argument('keyword')
+        @click.argument("keyword")
         def remove(keyword):
             """Remove an existing path item"""
             to_remove = [x for x in self.item_list if x.name == keyword]
@@ -202,7 +206,9 @@ def open_terminal(path):
         The path to open terminal on
     """
 
-    if platform.system() == 'Linux':
-        subprocess.Popen(args=['konsole', '-e', 'bash', '-c', f'cd {path}; $SHELL'])
+    if platform.system() == "Linux":
+        subprocess.Popen(args=["konsole", "-e", "bash", "-c", f"cd {path}; $SHELL"])
     else:
-        raise NotImplemented(f"Opening new terminal not supported on platform '{platform.system()}'")
+        raise NotImplemented(
+            f"Opening new terminal not supported on platform '{platform.system()}'"
+        )

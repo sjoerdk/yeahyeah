@@ -1,4 +1,3 @@
-
 import click
 
 from yeahyeah.context import YeahYeahContext
@@ -63,6 +62,7 @@ class YeahYeah:
         Notice injection of self. Together with status() This is the only method allowed to do so. All other methods
         have to make do with just a YeahYeahContext object
         """
+
         @click.group()
         @click.pass_context
         def root_cli(ctx):
@@ -71,15 +71,16 @@ class YeahYeah:
 
             ctx.obj = self.context
             return root_cli
+
         return root_cli
 
     def get_admin_group(self):
-        @click.group(name='admin')
+        @click.group(name="admin")
         def admin_group():
             """Admin options for yeahyeah and yeahyeah_plugins"""
             pass
 
-        @click.group(name='yeahyeah')
+        @click.group(name="yeahyeah")
         def yeahyeah_group():
             """Admin options for yeahyeah itself"""
             pass
@@ -105,7 +106,9 @@ class YeahYeah:
             """Configuration and status"""
             click.echo("YeahYeah launch status:")
             click.echo(f"settings folder: '{self.configuration_path}'")
-            click.echo(f"{len(self.plugins)} yeahyeah_plugins activated: [{', '.join([x.slug for x in self.plugins])}]")
+            click.echo(
+                f"{len(self.plugins)} yeahyeah_plugins activated: [{', '.join([x.slug for x in self.plugins])}]"
+            )
             click.echo(f"{len(self.root_cli.commands)} commands in main menu")
 
         return status
@@ -114,20 +117,26 @@ class YeahYeah:
     @click.command()
     def enable_autocompletion():
         """Instructions to enable auto-completion"""
-        click.echo('Execute the following line in a terminal to enable auto-completion for that terminal only:\n'
-                   '\n'
-                   '    $ eval "$(_JJ_COMPLETE=source jj)"\n'
-                   '\n'
-                   'To enable auto completion permanently, run this\n'
-                   '\n'
-                   "    $ echo 'eval \"$(_JJ_COMPLETE=source jj)\"' >> ~/.bashrc\n")
+        click.echo(
+            "Execute the following line in a terminal to enable auto-completion for that terminal only:\n"
+            "\n"
+            '    $ eval "$(_JJ_COMPLETE=source jj)"\n'
+            "\n"
+            "To enable auto completion permanently, run this\n"
+            "\n"
+            "    $ echo 'eval \"$(_JJ_COMPLETE=source jj)\"' >> ~/.bashrc\n"
+        )
 
 
 class YeahYeahPlugin:
     """Some named thing that adds launchable commands to yeahyeah"""
 
-    slug = 'BasePlugin'  # Short, no space name to use for describing this plugin but also as key for admin functions
-    short_slug = 'Base'   # Shorter slug, to append to options help text. For example 'url', or 'path'
+    slug = (
+        "BasePlugin"
+    )  # Short, no space name to use for describing this plugin but also as key for admin functions
+    short_slug = (
+        "Base"
+    )  # Shorter slug, to append to options help text. For example 'url', or 'path'
 
     def __init__(self, context: YeahYeahContext):
         """

@@ -2,6 +2,7 @@ class YeahYeahContext:
     """Core yeahyeah context object. This gets passed to all yeahyeah_plugins on init() and to any method call
 
     """
+
     def __init__(self, settings_path):
         """
 
