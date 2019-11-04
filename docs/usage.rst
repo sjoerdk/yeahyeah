@@ -2,7 +2,15 @@
 Usage
 =====
 
-just type 'jj' into any console after installation to see options.
+type 'jj' into any console after installation to see options.
 
-<Needs actual information>
+yeahyeah settings are stored directory by default `<homefolder>/.config/yeahyeah`
+
+
+Plugins
+=======
+Usage for built-in plugins
+
+path_item
+
 

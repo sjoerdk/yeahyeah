@@ -24,6 +24,29 @@ CLI launch manager. Dispense with the 5 manual steps for everything, just say ye
 * Free software: MIT license
 * Documentation: https://yeahyeah.readthedocs.io.
 
+What
+----
+With yeahyeah you can, for example, do this in a console window::
+
+    $ jj virus
+    > launches www.virustotal.com
+
+    $ jj search a website
+    > searches for 'a website' on duckduckgo
+
+    $ jj admin url_pattern add 'wikipedia' https://wikipedia.org
+    > adds an item 'wikipedia' that launches the given url
+
+    $ jj w<tab>
+    website   wikipedia
+    $ jj wi<tab>
+    $ jj wikipedia
+    > tab completion on all items
+
+    $ jj my_folder          # launches a set path in new terminal window
+
+    $ jj log add writing    # adds a log message 'writing' to clockifiy
+
 
 Features
 --------
@@ -31,7 +54,7 @@ Features
 * Launch commands from console/terminal
 * Command line interface based on python Click
 * Autocomplete for bash and zsh
-* plugin architecture
+* Plugin architecture. Write your own
 * Wildcard commands like 'Open firefox search on search term X'
 
 
