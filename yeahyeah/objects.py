@@ -1,7 +1,7 @@
-"""Useful objects that help solve common problems for plugins, such as generating lists of actions and persisting
+"""Useful objects that help solve common problems for yeahyeah_plugins, such as generating lists of actions and persisting
 these lists
 
-Anything above core yeahyeah functionality that can potentially be used by multiple plugins
+Anything above core yeahyeah functionality that can potentially be used by multiple yeahyeah_plugins
 """
 import collections
 import yaml

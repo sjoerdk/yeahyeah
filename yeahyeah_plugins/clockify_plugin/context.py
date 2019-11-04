@@ -1,4 +1,4 @@
-"""Context that gets passed around to this plugins' functions
+"""Context that gets passed around to this yeahyeah_plugins' functions
 
 """
 import datetime

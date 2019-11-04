@@ -7,9 +7,9 @@ from unittest.mock import Mock
 import pytest
 from click.testing import CliRunner
 
-from plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
+from yeahyeah_plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
 from yeahyeah.core import YeahYeah
-from plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 
 @pytest.fixture()
@@ -61,7 +61,7 @@ def mock_web_browser(monkeypatch):
     """Mock the python standard webbrowser
     """
     mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("plugins.url_pattern_plugin.core.webbrowser", mock_web_browser)
+    monkeypatch.setattr("yeahyeah_plugins.url_pattern_plugin.core.webbrowser", mock_web_browser)
     return mock_web_browser
 
 

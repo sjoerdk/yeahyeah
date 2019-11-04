@@ -2,16 +2,16 @@ import datetime
 
 import click
 
-from plugins.clockify_plugin.context import (
+from yeahyeah_plugins.clockify_plugin.context import (
     ClockifyPluginContext,
     pass_clockify_context,
     default_context,
     default_settings_file_name,
 )
 
-from plugins.clockify_plugin.decorators import handle_clockify_exceptions
-from plugins.clockify_plugin.parameters import TIME
-from plugins.clockify_plugin.time import as_local, now_local
+from yeahyeah_plugins.clockify_plugin.decorators import handle_clockify_exceptions
+from yeahyeah_plugins.clockify_plugin.parameters import TIME
+from yeahyeah_plugins.clockify_plugin.time import as_local, now_local
 from yeahyeah.decorators import pass_yeahyeah_context
 from yeahyeah.context import YeahYeahContext
 from yeahyeah.persistence import JSONSettingsFile

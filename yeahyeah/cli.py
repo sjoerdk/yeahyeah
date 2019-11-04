@@ -11,10 +11,10 @@ $ yeahyeah
 """
 from pathlib import Path
 
-from plugins.clockify_plugin.core import ClockifyPlugin
+from yeahyeah_plugins.clockify_plugin.core import ClockifyPlugin
 from yeahyeah.core import YeahYeah
-from plugins.path_item_plugin.core import PathItemPlugin
-from plugins.url_pattern_plugin.core import UrlPatternsPlugin
+from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
+from yeahyeah_plugins.url_pattern_plugin.core import UrlPatternsPlugin
 
 jj = YeahYeah(configuration_path=Path.home() / ".config" / "yeahyeah")
 

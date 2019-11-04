@@ -15,7 +15,7 @@ class YeahYeah:
         Parameters
         ----------
         configuration_path: Pathlike
-            Path to a location where plugins can read and write settings
+            Path to a location where yeahyeah_plugins can read and write settings
         """
         self.configuration_path = configuration_path
         self.plugins = []
@@ -33,7 +33,7 @@ class YeahYeah:
 
         Notes
         -----
-        Because all actions are added to root_cli directly, actions from different plugins can overwrite each other.
+        Because all actions are added to root_cli directly, actions from different yeahyeah_plugins can overwrite each other.
         Yeahyeah does not check this. New actions will overwrite old actions.
 
         Parameters
@@ -76,7 +76,7 @@ class YeahYeah:
     def get_admin_group(self):
         @click.group(name='admin')
         def admin_group():
-            """Admin options for yeahyeah and plugins"""
+            """Admin options for yeahyeah and yeahyeah_plugins"""
             pass
 
         @click.group(name='yeahyeah')
@@ -96,7 +96,7 @@ class YeahYeah:
         Notes
         -----
         like main(), status command also gets this slightly smelly access to self. This makes it possible
-        for the command to inspect all installed plugins etc.
+        for the command to inspect all installed yeahyeah_plugins etc.
         """
 
         @click.command()
@@ -105,7 +105,7 @@ class YeahYeah:
             """Configuration and status"""
             click.echo("YeahYeah launch status:")
             click.echo(f"settings folder: '{self.configuration_path}'")
-            click.echo(f"{len(self.plugins)} plugins activated: [{', '.join([x.slug for x in self.plugins])}]")
+            click.echo(f"{len(self.plugins)} yeahyeah_plugins activated: [{', '.join([x.slug for x in self.plugins])}]")
             click.echo(f"{len(self.root_cli.commands)} commands in main menu")
 
         return status
