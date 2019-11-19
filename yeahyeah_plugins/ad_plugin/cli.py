@@ -1,4 +1,5 @@
 import click
+from umcnad.core import UMCNPerson
 
 from yeahyeah.decorators import pass_yeahyeah_context
 from yeahyeah.context import YeahYeahContext
@@ -32,6 +33,16 @@ def status(context: ADPluginContext):
 
 
 @click.command()
+@pass_ad_context
+@click.argument("z_numbers", nargs=-1)
+def find_z_number(context: ADPluginContext, z_numbers):
+    """Translate z-number to name"""
+    people = context.search_people(list(z_numbers))
+    for person in people:
+        click.echo(f'{person} - {person.department}')
+
+
+@click.command()
 @handle_umcnad_exceptions
 @pass_yeahyeah_context
 def edit_settings(context: YeahYeahContext):
@@ -39,5 +50,5 @@ def edit_settings(context: YeahYeahContext):
     click.launch(str(context.settings_path / default_settings_file_name))
 
 
-for func in [status]:
+for func in [status, find_z_number]:
     main.add_command(func)

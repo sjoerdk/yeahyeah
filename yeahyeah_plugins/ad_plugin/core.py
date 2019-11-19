@@ -5,7 +5,7 @@ from yeahyeah.context import YeahYeahContext
 
 class ADPlugin(YeahYeahPlugin):
 
-    slug = "ucmn AD"
+    slug = "umcn_AD"
     short_slug = "umcnAD"
 
     def __init__(self, context: YeahYeahContext):

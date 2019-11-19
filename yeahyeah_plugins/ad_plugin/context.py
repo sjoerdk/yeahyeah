@@ -1,8 +1,11 @@
 """Context that gets passed around to this yeahyeah_plugins' functions
 
 """
+
+
 import click
 from umcnad.core import ADConnection
+from typing import List
 
 
 class ADPluginContext:
@@ -15,8 +18,25 @@ class ADPluginContext:
 
     def search_people(self, search_string):
         with ADConnection(url=self.server_url, bind_dn=self.bind_dn,
-                          password=click.prompt('password for umcn AD')) as connection:
+                          password=self.get_pass) as connection:
             return connection.search_people(search_string)
+
+    def search_people(self, z_numbers: List[str]):
+        """
+        Parameters
+        ----------
+        z_numbers: List[str]
+            List of z-numbers to search for
+        """
+        with ADConnection(url=self.server_url, bind_dn=self.bind_dn,
+                          password=self.get_pass()) as connection:
+            return connection.search_z_numbers(z_numbers)
+
+    @staticmethod
+    def get_pass():
+        """Get password for binding to AD. To be replaced with something more
+        convenient later """
+        return click.prompt('password for umcn AD', hide_input=True)
 
     @classmethod
     def init_from_dict(cls, dict_in):
