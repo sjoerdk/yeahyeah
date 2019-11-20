@@ -28,7 +28,8 @@ def a_yeahyeah_instance(tmpdir):
 
 @pytest.fixture()
 def mock_cli_runner(a_yeahyeah_instance):
-    """Runner that injects default context into each call, configuration path is tmpdir"""
+    """Runner that injects default context into each call, configuration path is
+     tmpdir"""
     return MockContextCliRunner(mock_context=a_yeahyeah_instance.context)
 
 

@@ -1,5 +1,6 @@
+import sys
+
 import click
-from umcnad.core import UMCNPerson
 
 from yeahyeah.decorators import pass_yeahyeah_context
 from yeahyeah.context import YeahYeahContext
@@ -7,19 +8,20 @@ from yeahyeah.persistence import JSONSettingsFile
 from yeahyeah_plugins.ad_plugin.context import default_settings_file_name, \
     default_context, ADPluginContext, pass_ad_context
 from yeahyeah_plugins.ad_plugin.decorators import handle_umcnad_exceptions
+from yeahyeah_plugins.ad_plugin.translator import find_z_numbers, Translator
 
 
 @click.group(name="ad")
 @click.pass_context
 @pass_yeahyeah_context
 def main(context: YeahYeahContext, ctx):
-    """Query Active Directory"""
+    """query active directory"""
     settings_file = JSONSettingsFile(
         path=context.settings_path / default_settings_file_name
     )
     if not settings_file.exists():
         click.echo(
-            f"Settings file not found. Writing default context to {settings_file.path}"
+            f"settings file not found. writing default context to {settings_file.path}"
         )
         settings_file.save(dict_in=default_context.to_dict())
     ctx.obj = ADPluginContext.init_from_dict(settings_file.load())
@@ -28,15 +30,18 @@ def main(context: YeahYeahContext, ctx):
 @click.command()
 @pass_ad_context
 def status(context: ADPluginContext):
-    """Show server and api key"""
+    """show server and api key"""
     click.echo(f"hello {context}")
 
 
 @click.command()
+@handle_umcnad_exceptions
 @pass_ad_context
 @click.argument("z_numbers", nargs=-1)
 def find_z_number(context: ADPluginContext, z_numbers):
-    """Translate z-number to name"""
+    """print name and info for z-number if possible"""
+    if not z_numbers:
+        raise click.badparameter('no z-numbers given')
     people = context.search_people(list(z_numbers))
     for person in people:
         click.echo(f'{person} - {person.department}')
@@ -44,11 +49,24 @@ def find_z_number(context: ADPluginContext, z_numbers):
 
 @click.command()
 @handle_umcnad_exceptions
+@pass_ad_context
+@click.argument("input_string", nargs=-1)
+def translate(context: ADPluginContext, input_string):
+    """replace any z-number in input text with name"""
+    # input_string = ''.join(sys.stdin.readlines())
+    input_string = " ".join(input_string)
+    people = context.search_people(list(find_z_numbers(input_string)))
+    glossary = {x.z_number: str(x) for x in people}
+    click.echo(Translator(glossary).process(input_string))
+
+
+@click.command()
+@handle_umcnad_exceptions
 @pass_yeahyeah_context
 def edit_settings(context: YeahYeahContext):
-    """Open context file for editing"""
+    """open context file for editing"""
     click.launch(str(context.settings_path / default_settings_file_name))
 
 
-for func in [status, find_z_number]:
+for func in [status, find_z_number, translate]:
     main.add_command(func)
