@@ -52,6 +52,17 @@ def find_z_number(context: ADPluginContext, z_numbers):
         click.echo(f"{person} - {person.department}")
 
 
+def read_stdin():
+    """
+
+    Returns
+    -------
+    str
+        All input from stdin. Might contain newlines
+    """
+    return ''.join(sys.stdin.readlines())
+
+
 @click.command()
 @handle_umcnad_exceptions
 @pass_ad_context
@@ -62,10 +73,15 @@ def find_z_number(context: ADPluginContext, z_numbers):
 @click.option(
     "--email/--no-email", default=False, help="Print email after name"
 )
-def translate(context: ADPluginContext, input_string, department, email):
+@click.option(
+    "--stdin/--no-stdin", default=False, help="read from standard in"
+)
+def translate(context: ADPluginContext, input_string, department, email, stdin):
     """replace any z-number in input text with name"""
-    # input_string = ''.join(sys.stdin.readlines())
-    input_string = " ".join(input_string)
+    if stdin:
+        input_string = read_stdin()
+    else:
+        input_string = " ".join(input_string)
     people = context.search_people(list(find_z_numbers(input_string)))
 
     def person_to_string(person: UMCNPerson):
