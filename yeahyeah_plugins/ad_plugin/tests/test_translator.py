@@ -94,7 +94,3 @@ def test_z_translator_tricky_text(some_other_text, person_list):
     result = Translator(glossary).process(some_other_text)
     assert result.count("Testo, Jane") == 3
 
-
-
-
-

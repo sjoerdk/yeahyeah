@@ -83,3 +83,12 @@ def test_translate(mock_adcontext_runner, an_ad_context_with_search, person_list
         mock_adcontext_runner.invoke(translate, args="user z123123 was bad").output
         == "user z123123 was bad\n"
     )
+
+
+def test_translate_empty(mock_adcontext_runner, an_ad_context_with_search, person_list):
+    """should not be a problem"""
+    result = mock_adcontext_runner.invoke(
+        translate, catch_exceptions=False
+    )
+    assert result.exit_code == 0
+    assert result.output == ""

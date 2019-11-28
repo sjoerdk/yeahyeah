@@ -1,6 +1,7 @@
 import sys
 
 import click
+from click.exceptions import BadParameter
 from umcnad.core import UMCNPerson
 
 from yeahyeah.decorators import pass_yeahyeah_context
@@ -82,6 +83,8 @@ def translate(context: ADPluginContext, input_string, department, email, stdin):
         input_string = read_stdin()
     else:
         input_string = " ".join(input_string)
+    if not input_string:
+        return
     people = context.search_people(list(find_z_numbers(input_string)))
 
     def person_to_string(person: UMCNPerson):
