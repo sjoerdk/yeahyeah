@@ -74,7 +74,7 @@ def read_stdin():
     "--email/--no-email", default=False, help="Print email after name"
 )
 @click.option(
-    "--stdin/--no-stdin", default=False, help="read from standard in"
+    "--stdin/--no-stdin", default=False, help="Read from standard in"
 )
 def translate(context: ADPluginContext, input_string, department, email, stdin):
     """replace any z-number in input text with name"""

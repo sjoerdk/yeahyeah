@@ -17,6 +17,42 @@ def some_text():
     """
 
 
+@pytest.fixture()
+def some_other_text():
+    return """
+        job 53781 on p01:
+        
+        ('job_id', 53781)
+        ('date', '2019-10-24T12:11:10')
+        ('user_name', 'z123456')
+        ('status', 'DONE')
+        ('error', None)
+        ('description', '{User: UMCN\\z123456}{RequestKey: 418}')
+        ('project_name', 'Cliniquest')
+        ('priority', 4)
+        ('files_downloaded', 3289)
+        ('files_processed', 3288)
+        ('destination_id', 53779)
+        ('destination_name', None)
+        ('destination_path', '\\\\umcsanfsclp01\\radng_idis_out\\Z123456\\cliniquestTEST8_V4')
+        ('destination_network', None)
+        ('destination_status', 'BASE')
+        ('destination_type', 'PATH')
+        ('source_id', 53779)
+        ('source_instance_id', 'accession_number:1356676.23557070')
+        ('source_status', 'NEW')
+        ('source_type', 'WADO')
+        ('source_anonymizedpatientid', None)
+        ('source_anonymizedpatientname', None)
+        ('source_pims_keyfile_id', 39)
+        ('source_name', 'IDC_WADO')
+        ('source_path', None)
+        ('source_protocol', 3178)
+        ('source_subject', 3178)
+
+    """
+
+
 def test_translator():
     glossary = {"Jack": "Jaap", "Anne": "Annelies"}
     translator = Translator(glossary)
@@ -38,8 +74,6 @@ def test_find_z_numbers(some_text):
 
 def test_z_translator(some_text, person_list):
     """Replace z-numbers with person names in text """
-    z_numbers = find_z_numbers(some_text)
-    # persons = find_persons(z_numbers)
     persons: List[UMCNPerson] = person_list
     glossary = {x.z_number: str(x) for x in persons}
     expected = """
@@ -50,5 +84,17 @@ def test_z_translator(some_text, person_list):
         55172  2019-11-08T13:32:38  ERROR    None       None       z690133        
     """
     assert Translator(glossary).process(some_text) == expected
+
+
+def test_z_translator_tricky_text(some_other_text, person_list):
+    """Try replacing with lots of special chars"""
+    persons: List[UMCNPerson] = person_list
+    glossary = {x.z_number: str(x) for x in persons}
+
+    result = Translator(glossary).process(some_other_text)
+    assert result.count("Testo, Jane") == 3
+
+
+
 
 
