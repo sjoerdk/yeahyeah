@@ -21,18 +21,6 @@ To create a plugin for yeahyeah, do the following:
     slug = "my_plugin"
     short_slug = "my"
 
-    # context is passed by main yeahyeah module when
-    # adding this plugin
-    def __init__(self, context: YeahYeahContext):
-        """My plugin
-
-        Parameters
-        ----------
-        context: yeahyeah.core.YeahYeahContext
-            Context of the root yeahyeah module
-        """
-        pass
-
     def get_commands(self):
         """
 
@@ -56,6 +44,8 @@ To create a plugin for yeahyeah, do the following:
 
         """
         raise NotImplemented()
+
+* If you want to access the settings directory during plugin initialization, overwrite the `init_from_context(cls, context: YeahYeahContext)` method
 
 
 * If you want to pass your own context (paths, objects, passwords?) to your plugin's methods, put this in `cli.py`::
