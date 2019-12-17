@@ -19,7 +19,7 @@ def a_yeahyeah_instance(tmpdir):
 
     jj = YeahYeah(configuration_path=Path(str(tmpdir)))
 
-    jj.add_plugin(ClockifyPlugin(context=jj.context))
+    jj.add_plugin(ClockifyPlugin.init_from_context(context=jj.context))
     jj.add_plugin(PathItemPlugin.init_from_context(context=jj.context))
     jj.add_plugin(UrlPatternsPlugin.init_from_context(context=jj.context))
 

@@ -8,16 +8,6 @@ class ADPlugin(YeahYeahPlugin):
     slug = "umcn_AD"
     short_slug = "umcnAD"
 
-    def __init__(self, context: YeahYeahContext):
-        """Plugin that queries AD
-
-        Parameters
-        ----------
-        context: yeahyeah.context.YeahYeahContext
-            Context of the root yeahyeah module
-        """
-        pass
-
     def get_commands(self):
         """
 

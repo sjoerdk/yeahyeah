@@ -133,20 +133,21 @@ class YeahYeahPlugin:
 
     slug = (
         "BasePlugin"
-    )  # Short, no space name to use for describing this plugin but also as key for admin functions
+    )  # Short, no space name to use for describing this plugin
     short_slug = (
         "Base"
-    )  # Shorter slug, to append to options help text. For example 'url', or 'path'
+    )  # Shorter slug, for help text. For example 'url', or 'path'
 
-    def __init__(self, context: YeahYeahContext):
-        """
+    @classmethod
+    def init_from_context(cls, context: YeahYeahContext):
+        """Initialise this plugin from a yeahyeah context object only
 
         Parameters
         ----------
         context: YeahYeahContext
             Context of the root yeahyeah module
         """
-        raise NotImplemented()
+        return cls()
 
     def __str__(self):
         return f"YeahYeah plugin '{self.slug}'"
