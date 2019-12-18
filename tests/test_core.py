@@ -12,7 +12,8 @@ from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
 from yeahyeah_plugins.url_pattern_plugin.core import UrlPatternsPlugin
 from tests.conftest import MockContextCliRunner
 
-from yeahyeah.core import YeahYeah, YeahYeahSettings, YeahYeahSettingsFile
+from yeahyeah.core import YeahYeah, YeahYeahSettings, YeahYeahSettingsFile, \
+    assert_yeahyeah_settings, DEFAULT_YEAHYEAH_SETTINGS
 from tests import RESOURCE_PATH
 
 
@@ -63,11 +64,31 @@ def test_command_admin_status(a_yeahyeah_instance_with_plugins, mock_cli_runner)
     assert result.exit_code == 0
 
 
+def test_command_admin_edit_plugins(a_yeahyeah_instance, mock_cli_runner):
+    """Test the yeahyeah admin command"""
+    result = mock_cli_runner.invoke(a_yeahyeah_instance.root_cli,
+                                    args='admin yeahyeah edit-plugins'.split(' '))
+    assert result.exit_code == 0
+
+
 def test_yeahyeah_settings_load():
     settings_file = YeahYeahSettingsFile(path=RESOURCE_PATH / 'yeahyeah_settings.json')
     settings = settings_file.load_settings()
     assert settings.plugin_paths == ['someplugin.core.SomePlugin',
                                      'otherplugin.core.OtherPlugin']
+
+
+def test_yeahyeah_settings_assert(tmpdir):
+    # non-existent path should force default file creation
+    path = Path(tmpdir) / 'test_settings'
+    assert not path.exists()
+    settings = assert_yeahyeah_settings(path)
+    assert path.exists()
+    assert settings == DEFAULT_YEAHYEAH_SETTINGS
+
+    # now load existing file. Should not modify
+    settings = assert_yeahyeah_settings(RESOURCE_PATH / 'yeahyeah_settings.json')
+    assert len(settings.plugin_paths) == 2
 
 
 def test_yeahyeah_settings_load_errors():

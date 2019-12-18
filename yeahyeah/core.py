@@ -1,4 +1,5 @@
 import importlib
+from pathlib import Path
 
 import click
 
@@ -21,6 +22,7 @@ class YeahYeah:
             Path to a location where yeahyeah can read and write settings
         """
         self.configuration_path = configuration_path
+        self.settings_file_path = configuration_path / 'yeahyeah_settings.json'
         self.plugins = []
 
         self.root_cli = self.get_root_cli()
@@ -123,11 +125,6 @@ class YeahYeah:
     def get_root_cli(self):
         """Create yeahyeah root group
 
-        Notes
-        -----
-        Notice injection of self. Together with status() This is the only method
-        allowed to do so. All other methods have to make do with just a
-        YeahYeahContext object
         """
 
         @click.group()
@@ -155,6 +152,7 @@ class YeahYeah:
         admin_group.add_command(yeahyeah_group)
         yeahyeah_group.add_command(self.enable_autocompletion)
         yeahyeah_group.add_command(self.get_status_command())
+        yeahyeah_group.add_command(self.get_edit_plugins_command())
 
         return admin_group
 
@@ -181,6 +179,17 @@ class YeahYeah:
 
         return status
 
+    def get_edit_plugins_command(self):
+        """Open the plugins file in default editor
+        """
+
+        @click.command()
+        def edit_plugins():
+            """Configuration and status"""
+            click.launch(str(self.settings_file_path))
+
+        return edit_plugins
+
     @staticmethod
     @click.command()
     def enable_autocompletion():
@@ -194,6 +203,17 @@ class YeahYeah:
             "\n"
             "    $ echo 'eval \"$(_JJ_COMPLETE=source jj)\"' >> ~/.bashrc\n"
         )
+
+    def get_settings(self):
+        """Get settings from expected location. Create default settings if not found
+
+        Returns
+        -------
+        YeahYeahSettings
+            Settings loaded from expected disk location, or default settings
+        """
+
+        return assert_yeahyeah_settings(self.settings_file_path)
 
 
 class YeahYeahPlugin:
@@ -256,6 +276,25 @@ class YeahYeahSettings:
         return cls(plugin_paths=dict_in)
 
 
+DEFAULT_YEAHYEAH_SETTINGS = \
+    YeahYeahSettings(["yeahyeah_plugins.url_pattern_plugin.core.UrlPatternsPlugin"])
+
+
+def assert_yeahyeah_settings(path):
+    """Either read settings at path, or put default settings there
+
+    Returns
+    -------
+    YeahYeahSettings
+    """
+    settings_file = YeahYeahSettingsFile(path)
+    if settings_file.exists():
+        return settings_file.load_settings()
+    else:
+        settings_file.save_settings(DEFAULT_YEAHYEAH_SETTINGS)
+        return DEFAULT_YEAHYEAH_SETTINGS
+
+
 class YeahYeahSettingsFile(JSONSettingsFile):
     """A file that can load and save YeahYeahSettings"""
 
@@ -286,6 +325,10 @@ class YeahYeahSettingsFile(JSONSettingsFile):
 
         """
         self.save(settings.to_dict())
+
+    def exists(self):
+        """True if this file exists on disk"""
+        return Path(self.path).exists()
 
 
 class YeahYeahPluginImportException(YeahYeahException):
