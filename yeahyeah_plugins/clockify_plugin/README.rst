@@ -29,7 +29,10 @@ Installation
 ------------
 * Install the YeahYeah launch manager <https://github.com/sjoerdk/yeahyeah>
 * This lib comes with the launch manager
-* Add the following plugin path to yeahyeah: 'yeahyeah.yeahyeah_plugins.clockify_plugin.core.ADPlugin'
+* Follow the steps for plugin_installation_ with plugin path to yeahyeah::
+
+    `yeahyeah.yeahyeah_plugins.clockify_plugin.core.ADPlugin`
+
 
 Credits
 -------
@@ -41,3 +44,4 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _clockify: https://github.com/sjoerdk/clockifyclient
 .. _YeahYeah: https://github.com/sjoerdk/yeahyeah
+.. _plugin_installation: https://yeahyeah.readthedocs.io/en/latest/plugins.html#plugin-installation
