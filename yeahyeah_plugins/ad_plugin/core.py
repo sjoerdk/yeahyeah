@@ -1,6 +1,5 @@
 from yeahyeah_plugins.ad_plugin.cli import main, edit_settings
 from yeahyeah.core import YeahYeahPlugin
-from yeahyeah.context import YeahYeahContext
 
 
 class ADPlugin(YeahYeahPlugin):

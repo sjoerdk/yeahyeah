@@ -28,7 +28,8 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3.7',
     ],
-    description='dispense with the 5 manual steps, just say yeah yeah I know just do it come on move',
+    description='Command line launch manager. Do things quick yeah yeah I know '
+                'just do it come on move',
     entry_points={
         'console_scripts': ['yeahyeah=yeahyeah.cli:yeahyeah', 'jj=yeahyeah.cli:yeahyeah']
     },
@@ -38,7 +39,7 @@ setup(
     include_package_data=True,
     keywords='yeahyeah',
     name='yeahyeah',
-    packages=find_packages(include=['yeahyeah', 'yeahyeah_plugins*'], exclude=['*tests']),
+    packages=find_packages(include=['yeahyeah', 'yeahyeah_plugins*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
