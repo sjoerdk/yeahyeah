@@ -39,11 +39,11 @@ setup(
     include_package_data=True,
     keywords='yeahyeah',
     name='yeahyeah',
-    packages=find_packages(include=['yeahyeah', 'yeahyeah_plugins*']),
+    packages=find_packages(include=['yeahyeah', 'yeahyeah_plugins*'], exclude=['*tests']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/sjoerdk/yeahyeah',
-    version='0.2.9',
+    version='0.2.8',
     zip_safe=False,
 )

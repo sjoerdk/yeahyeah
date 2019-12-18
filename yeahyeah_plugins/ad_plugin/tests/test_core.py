@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import click
 import pytest
 
-from tests.conftest import MockContextCliRunner
+from yeahyeah.plugin_testing import MockContextCliRunner
 from yeahyeah.context import YeahYeahContext
 from yeahyeah_plugins.ad_plugin.cli import main, find_z_number, translate
 from yeahyeah_plugins.ad_plugin.context import ADPluginContext

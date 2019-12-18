@@ -10,7 +10,7 @@ from yeahyeah.persistence import YeahYeahPersistenceException
 from yeahyeah_plugins.clockify_plugin.core import ClockifyPlugin
 from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
 from yeahyeah_plugins.url_pattern_plugin.core import UrlPatternsPlugin
-from tests.conftest import MockContextCliRunner
+from yeahyeah.plugin_testing import MockContextCliRunner
 
 from yeahyeah.core import YeahYeah, YeahYeahSettings, YeahYeahSettingsFile, \
     assert_yeahyeah_settings, DEFAULT_YEAHYEAH_SETTINGS
