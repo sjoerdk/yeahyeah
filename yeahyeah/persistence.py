@@ -2,6 +2,7 @@
 
 """
 import json
+from typing import Dict
 
 from yeahyeah.exceptions import YeahYeahException
 
@@ -71,7 +72,7 @@ class JSONSettingsFile(SettingsFile):
                     f"Error trying to decode contents of {self.path}: {e}"
                 )
 
-    def save(self, dict_in):
+    def save(self, dict_in: Dict):
         """
 
         Parameters

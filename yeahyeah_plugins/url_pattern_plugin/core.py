@@ -189,7 +189,8 @@ class UrlPatternsPlugin(YeahYeahPlugin):
                 ]
                 URLPatternList(items=example_patterns).save(f)
             click.echo(
-                f"UrlPattern config file {config_file_path} did not exist. Creating with default contents.."
+                f"UrlPattern config file {config_file_path} did not exist. Creating "
+                f"with default contents.."
             )
 
     def get_commands(self):

@@ -50,8 +50,8 @@ def path_item_list():
 def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
     """An instance of the yeahyeah launch manager with some default plugins_old and commands"""
     yeahyeah = YeahYeah(configuration_path=tmpdir)
-    yeahyeah.add_plugin(UrlPatternsPlugin(pattern_list=url_pattern_list))
-    yeahyeah.add_plugin(PathItemPlugin(item_list=path_item_list))
+    yeahyeah.add_plugin_instance(UrlPatternsPlugin(pattern_list=url_pattern_list))
+    yeahyeah.add_plugin_instance(PathItemPlugin(item_list=path_item_list))
 
     return yeahyeah
 

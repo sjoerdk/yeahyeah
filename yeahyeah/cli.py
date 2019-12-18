@@ -12,16 +12,17 @@ $ yeahyeah
 from pathlib import Path
 
 from yeahyeah.core import YeahYeah
-from yeahyeah_plugins.ad_plugin.core import ADPlugin
-from yeahyeah_plugins.clockify_plugin.core import ClockifyPlugin
-from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
-from yeahyeah_plugins.url_pattern_plugin.core import UrlPatternsPlugin
 
-jj = YeahYeah(configuration_path=Path.home() / ".config" / "yeahyeah")
+configuration_path = Path.home() / ".config" / "yeahyeah"
 
-jj.add_plugin(ClockifyPlugin.init_from_context(context=jj.context))
-jj.add_plugin(PathItemPlugin.init_from_context(context=jj.context))
-jj.add_plugin(UrlPatternsPlugin.init_from_context(context=jj.context))
-jj.add_plugin(ADPlugin.init_from_context(context=jj.context))
+jj = YeahYeah(configuration_path=configuration_path)
+
+plugin_classes = ['yeahyeah_plugins.clockify_plugin.core.ClockifyPlugin',
+                  'yeahyeah_plugins.ad_plugin.core.ADPlugin',
+                  'yeahyeah_plugins.path_item_plugin.core.PathItemPlugin',
+                  'yeahyeah_plugins.url_pattern_plugin.core.UrlPatternsPlugin']
+
+for class_ref in plugin_classes:
+    jj.add_plugin(class_ref)
 
 yeahyeah = jj.root_cli  # base click command line entry point

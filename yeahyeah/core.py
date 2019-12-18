@@ -1,11 +1,15 @@
+import importlib
+
 import click
 
 from yeahyeah.context import YeahYeahContext
 from yeahyeah.decorators import pass_yeahyeah_context
+from yeahyeah.exceptions import YeahYeahException
+from yeahyeah.persistence import JSONSettingsFile
 
 
 class YeahYeah:
-    """A cli module that has menu items
+    """A bare-bones launch manager. Plugins can be added to add launchable items
     """
 
     def __init__(self, configuration_path):
@@ -14,7 +18,7 @@ class YeahYeah:
         Parameters
         ----------
         configuration_path: Pathlike
-            Path to a location where yeahyeah_plugins can read and write settings
+            Path to a location where yeahyeah can read and write settings
         """
         self.configuration_path = configuration_path
         self.plugins = []
@@ -25,19 +29,22 @@ class YeahYeah:
 
         self.context = YeahYeahContext(settings_path=self.configuration_path)
 
-    def add_plugin(self, plugin):
+    def add_plugin_instance(self, plugin):
         """Add this plugin to yeahyeah
 
-        This will add all its actions to root_cli directly and all admin actions to root_cli/admin
+        This will add all its actions to root_cli directly and all admin actions to
+        root_cli/admin
 
         Notes
         -----
-        Because all actions are added to root_cli directly, actions from different yeahyeah_plugins can overwrite each other.
-        Yeahyeah does not check this. New actions will overwrite old actions.
+        Because all actions are added to root_cli directly, actions from different
+        yeahyeah_plugins can overwrite each other. YeahYeah does not check this.
+        New actions will overwrite old actions.
 
         Parameters
         ----------
         plugin: yeahyeah.core.YeahYeahPlugin
+            Plugin instance to add
 
         """
         self.plugins.append(plugin)
@@ -54,13 +61,73 @@ class YeahYeah:
             plugin_admin.add_command(command)
         self.admin_cli.add_command(plugin_admin)
 
+    def add_plugin(self, plugin):
+        """Create an instance of this class and add to yeahyeah. Hides some
+        details over add_plugin_instance
+
+        Parameters
+        ----------
+        plugin: YeahYeahPlugin class or string
+            Plugin class to add. If string, will try to import class, if class, will
+            import that class directly
+
+        Raises
+        ------
+        ModuleNotFoundError
+            When given import path does not exist
+        AttributeError:
+            When given plugin does not fulfill the YeahYeahPlugin signature
+        YeahYeahPluginImportException
+            When plugin is neither a string nor a type
+
+        """
+        if type(plugin) == str:
+            self.add_plugin_by_path(class_import_path=plugin)
+        elif type(plugin) == type:
+            self.add_plugin_class(plugin_class=plugin)
+        else:
+            msg = f"Cannot add {plugin}. This does not seems to be a class import" \
+                  f" path or a class"
+            raise YeahYeahPluginImportException(msg)
+
+    def add_plugin_class(self, plugin_class):
+        """Create an instance of this class and add to yeahyeah. Hides some
+        details over add_plugin_instance
+
+        Parameters
+        ----------
+        plugin_class: class extending yeahyeah.core.YeahYeahPlugin
+            Plugin class to add
+        """
+        self.add_plugin_instance(plugin_class.init_from_context(context=self.context))
+
+    def add_plugin_by_path(self, class_import_path):
+        """Add a plugin by giving the python object import path
+
+        Parameters
+        ----------
+        class_import_path: str
+            Full import path to a YeahYeahPlugin class. For example
+            'myplugin.core.YeahYeahPluginClass'
+
+        Returns
+        -------
+        class:
+            loaded from class_import path
+
+        """
+        module, classname = class_import_path.rsplit('.', 1)
+        class_def = getattr(importlib.import_module(module), classname)
+        self.add_plugin_class(class_def)
+
     def get_root_cli(self):
         """Create yeahyeah root group
 
         Notes
         -----
-        Notice injection of self. Together with status() This is the only method allowed to do so. All other methods
-        have to make do with just a YeahYeahContext object
+        Notice injection of self. Together with status() This is the only method
+        allowed to do so. All other methods have to make do with just a
+        YeahYeahContext object
         """
 
         @click.group()
@@ -96,8 +163,9 @@ class YeahYeah:
 
         Notes
         -----
-        like main(), status command also gets this slightly smelly access to self. This makes it possible
-        for the command to inspect all installed yeahyeah_plugins etc.
+        like main(), status command also gets this slightly smelly access to self.
+        This makes it possible for the command to inspect all installed
+        yeahyeah_plugins etc.
         """
 
         @click.command()
@@ -172,3 +240,53 @@ class YeahYeahPlugin:
 
         """
         raise NotImplementedError()
+
+
+class YeahYeahSettings:
+    """Settings for the core yeahyeah module"""
+
+    def __init__(self, plugin_paths):
+        self.plugin_paths = plugin_paths
+
+    def to_dict(self):
+        return self.plugin_paths
+
+    @classmethod
+    def from_dict(cls, dict_in):
+        return cls(plugin_paths=dict_in)
+
+
+class YeahYeahSettingsFile(JSONSettingsFile):
+    """A file that can load and save YeahYeahSettings"""
+
+    def load_settings(self):
+        """Load settings from this file
+
+        Returns
+        -------
+        YeahYeahSettings
+            The loaded settings
+
+        Raises
+        ------
+        FileNotFoundError
+            If the file does not exist
+        YeahYeahPersistenceException
+            If file exists but cannot be parsed
+
+        """
+        return YeahYeahSettings.from_dict(self.load())
+
+    def save_settings(self, settings):
+        """
+
+        Parameters
+        ----------
+        settings: YeahYeahSettings
+
+        """
+        self.save(settings.to_dict())
+
+
+class YeahYeahPluginImportException(YeahYeahException):
+    pass
