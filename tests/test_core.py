@@ -64,11 +64,21 @@ def test_command_admin_status(a_yeahyeah_instance_with_plugins, mock_cli_runner)
     assert result.exit_code == 0
 
 
-def test_command_admin_edit_plugins(a_yeahyeah_instance, mock_cli_runner):
+@pytest.fixture
+def disable_click_launch(monkeypatch):
+    """Make sure click.launch does not actually launch anything"""
+    mock_launch = Mock()
+    monkeypatch.setattr('yeahyeah.core.click.launch', mock_launch)
+    return mock_launch
+
+
+def test_command_admin_edit_plugins(a_yeahyeah_instance, mock_cli_runner,
+                                    disable_click_launch):
     """Test the yeahyeah admin command"""
     result = mock_cli_runner.invoke(a_yeahyeah_instance.root_cli,
                                     args='admin yeahyeah edit-plugins'.split(' '))
     assert result.exit_code == 0
+    assert disable_click_launch.called
 
 
 def test_yeahyeah_settings_load():

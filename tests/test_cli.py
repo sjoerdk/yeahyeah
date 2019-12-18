@@ -18,14 +18,14 @@ def mock_config_path(tmpdir, monkeypatch):
     return config_path
 
 
-def test_cli_read_settings(mock_config_path):
+def test_cli_read_settings(mock_config_path, disable_click_echo):
     # run cli without settings file
     runner = CliRunner()
     yeahyeah_lib = importlib.import_module('yeahyeah.cli')
     runner.invoke(yeahyeah_lib.yeahyeah, catch_exceptions=False)
 
 
-def test_cli_read_settings(monkeypatch):
+def test_cli_read_settings_corrupted(monkeypatch):
     # run cli with corrupt settings file
     mock_get_settings = Mock(side_effect=YeahYeahPersistenceException(
         "Could not read settings. These settings are weird"))

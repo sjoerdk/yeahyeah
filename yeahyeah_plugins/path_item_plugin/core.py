@@ -155,7 +155,6 @@ class PathItemPlugin(YeahYeahPlugin):
                 f"Creating with default contents.."
             )
 
-
     def get_commands(self):
         """
 

@@ -12,6 +12,13 @@ from yeahyeah.core import YeahYeah
 from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
 
 
+@pytest.fixture(autouse=True)
+def disable_click_echo(monkeypatch):
+    """Don't print click.echo to console. Click runner disables this, but not
+    all tests use click runner to invoke all commands. So this is needed"""
+    monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
+
+
 @pytest.fixture()
 def url_pattern_list():
     """A pattern list with some content"""
