@@ -31,7 +31,7 @@ Installation
 * This lib comes with the launch manager
 * Follow the steps for plugin_installation_ with plugin path to yeahyeah::
 
-    `yeahyeah.yeahyeah_plugins.clockify_plugin.core.ADPlugin`
+    "yeahyeah_plugins.clockify_plugin.core.ClockifyPlugin"
 
 
 Credits
