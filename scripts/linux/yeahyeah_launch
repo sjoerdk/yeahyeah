@@ -46,7 +46,7 @@ function yeahyeah_launch {
         then
             echo already exists, bring to foreground
             YEAHYEAH_WINDOW_ID=$(xdotool search --pid $YEAHYEAH_PID | tail -1)
-            xdotool type --window $YEAHYEAH_WINDOW_ID "jj " && xdotool windowactivate $YEAHYEAH_WINDOW_ID >/dev/null
+            xdotool windowactivate --sync $YEAHYEAH_WINDOW_ID > /dev/null && xdotool key --window $YEAHYEAH_WINDOW_ID ctrl+U && xdotool type --window $YEAHYEAH_WINDOW_ID "jj "
         else
             echo creating new..
             create_new_yeahyeah_window &
@@ -62,3 +62,5 @@ function create_new_yeahyeah_window {
 }
 
 yeahyeah_launch
+
+/
