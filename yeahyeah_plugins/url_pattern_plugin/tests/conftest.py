@@ -5,17 +5,11 @@ import webbrowser
 from unittest.mock import Mock
 
 import pytest
+from click.testing import CliRunner
 
 from yeahyeah_plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
 from yeahyeah.core import YeahYeah
 from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
-
-
-@pytest.fixture(autouse=True)
-def disable_click_echo(monkeypatch):
-    """Don't print click.echo to console. Click runner disables this, but not
-    all tests use click runner to invoke all commands. So this is needed"""
-    monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
 
 
 @pytest.fixture()
@@ -54,7 +48,8 @@ def path_item_list():
 
 @pytest.fixture()
 def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
-    """An instance of the yeahyeah launch manager with some default plugins_old and commands"""
+    """An instance of the yeahyeah launch manager with some default plugins
+     and commands"""
     yeahyeah = YeahYeah(configuration_path=tmpdir)
     yeahyeah.add_plugin_instance(UrlPatternsPlugin(pattern_list=url_pattern_list))
     yeahyeah.add_plugin_instance(PathItemPlugin(item_list=path_item_list))
@@ -71,3 +66,47 @@ def mock_web_browser(monkeypatch):
     return mock_web_browser
 
 
+class MockContextCliRunner(CliRunner):
+    """a click.testing.CliRunner that always passes a mocked context to any call, making sure any operations
+    on current dir are done in a temp folder"""
+
+    def __init__(self, *args, mock_context, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        self.mock_context = mock_context
+
+    def invoke(
+        self,
+        cli,
+        args=None,
+        input=None,
+        env=None,
+        catch_exceptions=True,
+        color=False,
+        mix_stderr=False,
+        **extra
+    ):
+        return super().invoke(
+            cli,
+            args,
+            input,
+            env,
+            catch_exceptions,
+            color,
+            mix_stderr,
+            obj=self.mock_context,
+        )
+
+
+class YeahYeahCommandLineParserRunner(MockContextCliRunner):
+    """A click runner that always injects a YeahYeahContext instance into the context
+    """
+
+    def __init__(self, *args, mock_context, **kwargs):
+        """
+
+        Parameters
+        ----------
+        mock_context: YeahYeahContext
+        """
+        super().__init__(*args, mock_context=mock_context, **kwargs)

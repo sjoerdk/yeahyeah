@@ -1,18 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from pathlib import Path
+from unittest.mock import Mock
 
+import pytest
 from click.testing import CliRunner
 
 from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
 from yeahyeah.core import YeahYeah
 
 
+@pytest.fixture(autouse=True)
+def disable_click_echo(monkeypatch):
+    """Don't print click.echo to console. Click runner disables this, but not
+    all tests use click runner to invoke all commands. So this is needed"""
+    monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
+
+
 def test_path_item_plugin(path_item_list, tmpdir):
 
     yeahyeah = YeahYeah(configuration_path=tmpdir)
     plugin = PathItemPlugin(item_list=path_item_list)
-    yeahyeah.add_plugin(plugin)
+    yeahyeah.add_plugin_instance(plugin)
 
     assert len(plugin.get_commands()) == 2
 

@@ -8,16 +8,6 @@ class ClockifyPlugin(YeahYeahPlugin):
     slug = "clockify"
     short_slug = "clock"
 
-    def __init__(self, context: YeahYeahContext):
-        """Plugin that controls clockify
-
-        Parameters
-        ----------
-        context: yeahyeah.context.YeahYeahContext
-            Context of the root yeahyeah module
-        """
-        pass
-
     def get_commands(self):
         """
 

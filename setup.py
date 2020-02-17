@@ -11,7 +11,8 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', 'pyyaml', 'clockifyclient', 'python-dateutil']
+requirements = ['Click>=6.0', 'pyyaml', 'clockifyclient', 'python-dateutil',
+                'lark-parser']
 
 setup_requirements = ['pytest-runner']
 
@@ -27,7 +28,8 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3.7',
     ],
-    description='dispense with the 5 manual steps, just say yeah yeah I know just do it come on move',
+    description='Command line launch manager. Do things quick yeah yeah I know '
+                'just do it come on move',
     entry_points={
         'console_scripts': ['yeahyeah=yeahyeah.cli:yeahyeah', 'jj=yeahyeah.cli:yeahyeah']
     },
@@ -42,6 +44,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/sjoerdk/yeahyeah',
-    version='0.2.6',
+    version='0.4.0',
     zip_safe=False,
 )

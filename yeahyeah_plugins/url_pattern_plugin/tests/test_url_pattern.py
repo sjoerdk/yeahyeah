@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -15,6 +16,13 @@ from yeahyeah_plugins.url_pattern_plugin.core import (
     UrlPatternsPlugin,
 )
 from tests import RESOURCE_PATH
+
+
+@pytest.fixture()
+def disable_click_echo(monkeypatch):
+    """Don't print click.echo to console. Click runner disables this, but not
+    all tests use click runner to invoke all commands. So this is needed"""
+    monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
 
 
 def test_capture_all(mock_web_browser):
@@ -89,7 +97,7 @@ def test_base_class():
         test.to_click_command()
 
 
-def test_url_pattern_plugin(tmpdir):
+def test_url_pattern_plugin(tmpdir, disable_click_echo):
     config_file = Path(tmpdir / "test_url_pattern_config.yaml")
     assert not config_file.exists()
     # file should be created if not exists

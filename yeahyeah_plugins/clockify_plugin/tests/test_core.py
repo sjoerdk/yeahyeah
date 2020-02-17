@@ -8,7 +8,7 @@ from clockifyclient.models import Project
 
 from yeahyeah_plugins.clockify_plugin.cli import main, stop, projects, add, find_project
 from yeahyeah_plugins.clockify_plugin.context import ClockifyPluginContext
-from tests.conftest import MockContextCliRunner
+from yeahyeah.plugin_testing import MockContextCliRunner
 from yeahyeah.context import YeahYeahContext
 
 
