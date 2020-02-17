@@ -230,6 +230,12 @@ class UrlPatternsPlugin(YeahYeahPlugin):
             click.echo(status_str)
 
         @click.command()
+        def edit():
+            """Open settings file in editor"""
+            click.echo(f"Opening config file at '{self.config_file_path}'")
+            click.launch(str(self.config_file_path))
+
+        @click.command()
         @click.argument("keyword")
         @click.argument("pattern")
         def add(keyword, pattern):
@@ -257,4 +263,4 @@ class UrlPatternsPlugin(YeahYeahPlugin):
             """list all url path_items"""
             click.echo("\n".join([str(x) for x in self.pattern_list]))
 
-        return [status, list, add, remove]
+        return [status, list, edit, add, remove]
