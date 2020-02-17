@@ -192,6 +192,12 @@ class PathItemPlugin(YeahYeahPlugin):
             click.echo(status_str)
 
         @click.command()
+        def edit():
+            """Open settings file in editor"""
+            click.echo(f"Opening config file at '{self.config_file_path}'")
+            click.launch(str(self.config_file_path))
+
+        @click.command()
         @click.argument("keyword")
         @click.argument("path")
         def add(keyword, path):
@@ -219,7 +225,7 @@ class PathItemPlugin(YeahYeahPlugin):
             """list all paths"""
             click.echo("\n".join([str(x) for x in self.item_list]))
 
-        return [status, list, add, remove]
+        return [status, list, edit, add, remove]
 
 
 def open_terminal(path):
