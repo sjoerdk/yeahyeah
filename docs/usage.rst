@@ -11,6 +11,15 @@ Plugins
 =======
 Usage for built-in plugins
 
-path_item
+url_patterns::
+
+    $ jj <item name>                # To launch a url
+    $ jj admin url_patterns --help  # For options on adding, removing items
+
+path_item::
+
+    $ jj <item name>                # To launch a path (ubuntu only currently)
+    $ jj admin path_item --help     # For options on adding, removing items
+
 
 
