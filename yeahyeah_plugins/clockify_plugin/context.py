@@ -1,7 +1,4 @@
-"""Context that gets passed around to this yeahyeah_plugins' functions
-
-"""
-import datetime
+"""Context that gets passed around to this yeahyeah_plugins' functions"""
 
 import click
 from clockifyclient.api import APIServer
@@ -9,9 +6,7 @@ from clockifyclient.client import APISession
 
 
 class ClockifyPluginContext:
-    """Context that gets passed to each clockify_plugin function
-
-    """
+    """Context that gets passed to each clockify_plugin function"""
 
     def __init__(self, api_url, api_key):
         self.api_url = api_url

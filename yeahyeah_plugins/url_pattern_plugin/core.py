@@ -3,10 +3,9 @@ import webbrowser
 
 import click
 
-from yeahyeah.core import YeahYeahPlugin
 from yeahyeah.context import YeahYeahContext
-from yeahyeah.objects import SerialisableMenuItem, MenuItemList
-
+from yeahyeah.core import YeahYeahPlugin
+from yeahyeah.objects import MenuItemList, SerialisableMenuItem
 
 default_settings_file_name = "url_patterns.yaml"
 
@@ -47,8 +46,7 @@ class UrlPattern(SerialisableMenuItem):
         return self.pattern.format(*args_tuple)
 
     def to_click_command(self):
-        """This url pattern as a click command that can be added with add_command()
-        """
+        """URL pattern as a click command that can be added with add_command()"""
 
         arguments = re.findall(r"\{([^{}]*)\}", self.pattern)
 
@@ -74,8 +72,7 @@ class WildCardUrlPattern(UrlPattern):
         return parameters
 
     def to_click_command(self):
-        """This url pattern as a click command that can be added with add_command()
-        """
+        """URL pattern as a click command that can be added with add_command()"""
 
         arguments = re.findall(r"\{([^{}]*)\}", self.pattern)
 
@@ -101,7 +98,8 @@ class WildCardUrlPattern(UrlPattern):
 class URLPatternList(MenuItemList):
     """A persistable list of url patterns.
 
-    For human readable saving and loading"""
+    For human readable saving and loading
+    """
 
     item_classes = [WildCardUrlPattern, UrlPattern]
 
@@ -260,7 +258,7 @@ class UrlPatternsPlugin(YeahYeahPlugin):
 
         @click.command()
         def list():
-            """list all url path_items"""
+            """List all url path_items"""
             click.echo("\n".join([str(x) for x in self.pattern_list]))
 
         return [status, list, edit, add, remove]

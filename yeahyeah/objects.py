@@ -47,9 +47,8 @@ class SerialisableMenuItem(YeahYeahMenuItem):
     """A menu item that you can serialise to and from a dict"""
 
     def get_parameters(self):
-        """ Any extra parameters as dict. These are saved along with item name and help_text
-
-        Overwrite this in child classes
+        """Any extra parameters as dict. These are saved along with item name and
+        help_text. Overwrite this in child classes
 
         Returns
         -------
@@ -74,9 +73,7 @@ class SerialisableMenuItem(YeahYeahMenuItem):
 
     @classmethod
     def from_dict(cls, dict_in):
-        """Create an instance of this object from given dict.
-
-        """
+        """Create an instance of this object from given dict"""
         name = list(dict_in.keys()).pop()
         values = dict_in[name]
         help_text = values.pop("text", None)
@@ -102,7 +99,7 @@ class MenuItemList(collections.UserList):
 
     @property
     def items(self):
-        """I find 'items' more descriptive then 'data' """
+        """I find 'items' more descriptive then 'data'"""
         return self.data
 
     def save(self, file):
@@ -112,9 +109,6 @@ class MenuItemList(collections.UserList):
         ----------
         file: Open file handle
             save to this file
-
-        Returns
-        -------
 
         """
         yaml.dump(self.to_dict(), file, default_flow_style=False)
@@ -149,30 +143,27 @@ class MenuItemList(collections.UserList):
         item_list = []
         for key, values in loaded.items():
             item_as_dict = {key: values}
-            for ItemClass in cls.item_classes:
+            for item_class in cls.item_classes:
                 try:
-                    item_instance = ItemClass.from_dict(item_as_dict)
-                    break
+                    item_list.append(item_class.from_dict(item_as_dict))
                 except TypeError:
-                    item_instance = None
-                    continue
-            if not item_instance:
-                msg = f"Could not create any object from {item_as_dict}. Tried {[str(x) for x in cls.item_classes]}.."
-                raise MenuItemLoadError(msg)
-            else:
-                item_list.append(item_instance)
+                    MenuItemLoadError(
+                        f"Could not create any object from {item_as_dict}. "
+                        f"Tried {[str(x) for x in cls.item_classes]}.."
+                    )
 
         return cls(items=item_list)
 
     def to_dict(self):
-        """This list as dict, as terse as possible:
+        """As dict, as terse as possible:
 
         {pattern_name1: {param1: value1,...},
          pattern_name2: {param2: value2,...},
 
-         Notes
-         -----
-         This function is mainly to make yaml dump something readable to file. Dict of dict renders quite well
+        Notes
+        -----
+        This function is mainly to make yaml dump something readable to file. Dict
+        of dict renders quite well
         """
         result = {}
         for item in self.data:

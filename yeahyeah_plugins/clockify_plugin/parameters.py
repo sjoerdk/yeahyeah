@@ -1,6 +1,4 @@
-"""Custom click data types
-
-"""
+"""Custom click data types"""
 import datetime
 import re
 

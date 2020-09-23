@@ -8,7 +8,8 @@ from clockifyclient.models import ClockifyDatetime
 def now_local():
     """The datetime now, time zone aware for local timezone
 
-    For marking log messages. By default python datetimes are tz naive"""
+    For marking log messages. By default python datetimes are tz naive
+    """
     return as_local(datetime.datetime.now())
 
 
