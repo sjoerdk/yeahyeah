@@ -1,27 +1,32 @@
 # -*- coding: utf-8 -*-
 
-"""Console script for yeahyeah.
+"""Console script for yeahyeah
 # usage:
 
-$ pip install - -editable.
+$ pip install --editable .
 $ eval "$(_YEAHYEAH_COMPLETE=source yeahyeah)"
 $ eval "$(_JJ_COMPLETE=source jj)"
 $ yeahyeah
 
 """
-from pathlib import Path
 
+import click
+
+from yeahyeah.config import CORE_CONFIG_PATH
 from yeahyeah.core import YeahYeah
-from yeahyeah_plugins.ad_plugin.core import ADPlugin
-from yeahyeah_plugins.clockify_plugin.core import ClockifyPlugin
-from yeahyeah_plugins.path_item_plugin.core import PathItemPlugin
-from yeahyeah_plugins.url_pattern_plugin.core import UrlPatternsPlugin
+from yeahyeah.persistence import YeahYeahPersistenceException
 
-jj = YeahYeah(configuration_path=Path.home() / ".config" / "yeahyeah")
+jj = YeahYeah(configuration_path=CORE_CONFIG_PATH)
 
-jj.add_plugin(ClockifyPlugin(context=jj.context))
-jj.add_plugin(PathItemPlugin.init_from_context(context=jj.context))
-jj.add_plugin(UrlPatternsPlugin.init_from_context(context=jj.context))
-jj.add_plugin(ADPlugin(context=jj.context))
+try:
+    settings = jj.get_settings()
+except YeahYeahPersistenceException as e:
+    click.echo(f'Error: Could not read settings file. Please'
+               f' check {jj.settings_file_path}. Original error: {e}')
+    raise
+
+else:
+    for class_ref in settings.plugin_paths:
+        jj.add_plugin(class_ref)
 
 yeahyeah = jj.root_cli  # base click command line entry point

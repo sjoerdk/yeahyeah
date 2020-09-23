@@ -72,12 +72,16 @@ class PathItemPlugin(YeahYeahPlugin):
     slug = "path_items"
     short_slug = "path"
 
-    def __init__(self, item_list):
+    def __init__(self, item_list: PathItemList):
         """Plugin that holds PathItems
 
         Parameters
-        ----------
-        item_list: PathItemList
+        ----------        
+        item_list: PathItemList, optional
+            Optional list of items
+
+
+
 
         """
         self.item_list = item_list
@@ -85,12 +89,32 @@ class PathItemPlugin(YeahYeahPlugin):
 
     @classmethod
     def init_from_context(cls, context: YeahYeahContext):
-        return cls.__from_file_path__(
+        """
+        Parameters
+        ----------
+        context: YeahYeahContext
+            Context containing location to settings file etc.
+
+        Returns
+        -------
+
+        """
+        return cls.init_from_file_path(
             context.settings_path / default_settings_file_name
         )
 
     @classmethod
-    def __from_file_path__(cls, config_file_path):
+    def init_from_file_path(cls, config_file_path):
+        """
+        Parameters
+        ----------
+        config_file_path: Pathlike
+            path to path item config file
+
+        Returns
+        -------
+
+        """
         cls.assert_config_file(config_file_path)
         with open(config_file_path, "r") as f:
             item_list = PathItemList.load(f)
@@ -127,7 +151,8 @@ class PathItemPlugin(YeahYeahPlugin):
                 ]
                 PathItemList(items=example_patterns).save(f)
             click.echo(
-                f"PathItem config file {config_file_path} did not exist. Creating with default contents.."
+                f"PathItem config file {config_file_path} did not exist. "
+                f"Creating with default contents.."
             )
 
     def get_commands(self):
@@ -167,6 +192,12 @@ class PathItemPlugin(YeahYeahPlugin):
             click.echo(status_str)
 
         @click.command()
+        def edit():
+            """Open settings file in editor"""
+            click.echo(f"Opening config file at '{self.config_file_path}'")
+            click.launch(str(self.config_file_path))
+
+        @click.command()
         @click.argument("keyword")
         @click.argument("path")
         def add(keyword, path):
@@ -194,7 +225,7 @@ class PathItemPlugin(YeahYeahPlugin):
             """list all paths"""
             click.echo("\n".join([str(x) for x in self.item_list]))
 
-        return [status, list, add, remove]
+        return [status, list, edit, add, remove]
 
 
 def open_terminal(path):

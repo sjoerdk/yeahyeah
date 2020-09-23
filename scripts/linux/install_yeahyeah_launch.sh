@@ -1,6 +1,6 @@
 #!/bin/bash
 # Installation script for yeahyeah. Installs a script that launches a konsole,
-# or, alternatively, focuses an already exiting yeahyeah console using xdotool
+# or, alternatively, focuses an already existing yeahyeah console using xdotool
 
 # installation locations
 INSTALL_TMPDFILE=/usr/lib/tmpfiles.d/yeahyeah.conf

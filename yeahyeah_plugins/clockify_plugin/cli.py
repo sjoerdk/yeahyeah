@@ -53,17 +53,24 @@ def status(context: ClockifyPluginContext):
 )
 @handle_clockify_exceptions
 def add(context: ClockifyPluginContext, message, project, time):
-    """add log message"""
-    if not message:
-        raise click.BadParameter("Log message may not be empty")
+    """add log message and start timer. Stops running timer"""
+    if not message:  # have to check this here because 'message' captures all
+        raise click.BadParameter("Log message can not be empty")
     else:
         message = " ".join(message)
-    if not time:
-        time = now_local()
-    if project:
+
+    if project:   # do we know this project?
         project_obj = find_project(context.session.get_projects(), project)
     else:
         project_obj = None
+
+    if time:
+        # Stop currently running timer. Avoids overlap in times
+        result = context.session.stop_timer(time)
+        if result:
+            click.echo(f"stopped {result} at {time}")
+    else:
+        time = now_local()
 
     log_start = time
     click.echo(f"Adding {message} at {as_local(log_start)} to project {project_obj}")
@@ -73,7 +80,8 @@ def add(context: ClockifyPluginContext, message, project, time):
 
 
 def find_project(project_list, project_name_part):
-    """Try to match project_name to one of the projects found in context. Returns the first project that starts with
+    """Try to match project_name to one of the projects found in context. Returns the
+    first project that starts with
     project_name
 
     Parameters

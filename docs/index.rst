@@ -9,6 +9,7 @@ Welcome to yeahyeah's documentation!
    installation
    usage
    modules
+   plugins
    creating_a_plugin
    contributing
    authors
