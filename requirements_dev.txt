@@ -10,5 +10,5 @@ twine==3.2.0
 pytest==6.0.2
 pytest-runner==5.2
 Click==7.0
-clockifyclient==0.1.11
+clockifyclient==0.2.2
 python-dateutil==2.8.1
