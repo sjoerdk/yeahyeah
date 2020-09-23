@@ -21,7 +21,8 @@ from tests import RESOURCE_PATH
 @pytest.fixture()
 def disable_click_echo(monkeypatch):
     """Don't print click.echo to console. Click runner disables this, but not
-    all tests use click runner to invoke all commands. So this is needed"""
+    all tests use click runner to invoke all commands. So this is needed
+    """
     monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
 
 
@@ -44,7 +45,7 @@ def test_capture_all(mock_web_browser):
 
 
 def test_persisting(tmpdir):
-    """Test saving and reading url path_items from disk """
+    """Test saving and reading url path_items from disk"""
 
     test = UrlPattern(
         name="test",
@@ -67,9 +68,6 @@ def test_persisting(tmpdir):
     test_file = tmpdir / "urlpatterns.yaml"
     with open(test_file, "w") as f:
         patterns.save(f)
-
-    with open(test_file, "r") as f:
-        text = f.read()
 
     with open(test_file, "r") as f:
         from_file = URLPatternList.load(f)
@@ -125,7 +123,7 @@ def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):
 
     response = runner.invoke(
         yeahyeah_instance.admin_cli,
-        "url_patterns add a_url https://host.{param1}/index.html".split(" ")
+        "url_patterns add a_url https://host.{param1}/index.html".split(" "),
     )
     assert response.exit_code == 0
     assert len(url_pattern_plugin.pattern_list) == 4
@@ -135,8 +133,7 @@ def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):
     assert response.exit_code == 0
 
     response = runner.invoke(
-        yeahyeah_instance.admin_cli,
-        "url_patterns remove a_url".split(" ")
+        yeahyeah_instance.admin_cli, "url_patterns remove a_url".split(" ")
     )
     assert response.exit_code == 0
     assert len(url_pattern_plugin.pattern_list) == 3
@@ -151,8 +148,7 @@ def test_url_pattern_plugin_admin_add_escape_all(yeahyeah_instance):
 
     response = runner.invoke(
         yeahyeah_instance.admin_cli,
-        "url_patterns add a_url https://host.{param1}/space%20index.html".split(" ")
+        "url_patterns add a_url https://host.{param1}/space%20index.html".split(" "),
     )
     assert response.exit_code == 0
     assert len(url_pattern_plugin.pattern_list) == 4
-

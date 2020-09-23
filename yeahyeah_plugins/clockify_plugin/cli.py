@@ -1,5 +1,3 @@
-import datetime
-
 import click
 
 from yeahyeah_plugins.clockify_plugin.context import (
@@ -21,7 +19,7 @@ from yeahyeah.persistence import JSONSettingsFile
 @click.pass_context
 @pass_yeahyeah_context
 def main(context: YeahYeahContext, ctx):
-    """write to clockify log"""
+    """Write to clockify log"""
     settings_file = JSONSettingsFile(
         path=context.settings_path / default_settings_file_name
     )
@@ -53,13 +51,13 @@ def status(context: ClockifyPluginContext):
 )
 @handle_clockify_exceptions
 def add(context: ClockifyPluginContext, message, project, time):
-    """add log message and start timer. Stops running timer"""
+    """Add log message and start timer. Stops running timer"""
     if not message:  # have to check this here because 'message' captures all
         raise click.BadParameter("Log message can not be empty")
     else:
         message = " ".join(message)
 
-    if project:   # do we know this project?
+    if project:  # do we know this project?
         project_obj = find_project(context.session.get_projects(), project)
     else:
         project_obj = None
@@ -117,7 +115,7 @@ def find_project(project_list, project_name_part):
 )
 @handle_clockify_exceptions
 def stop(context: ClockifyPluginContext, time):
-    """stop any active logging stopwatch"""
+    """Stop any active logging stopwatch"""
     if not time:
         time = now_local()
     result = context.session.stop_timer(time)
@@ -134,7 +132,7 @@ def projects(context: ClockifyPluginContext):
     """Lists available projects for current clockify user"""
     projects_in = context.session.get_projects()
     if not projects_in:
-        click.echo(f"No projects found")
+        click.echo("No projects found")
     else:
         click.echo("\n".join([str(x) for x in projects_in]))
 

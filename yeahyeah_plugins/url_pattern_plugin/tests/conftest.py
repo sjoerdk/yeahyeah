@@ -1,15 +1,22 @@
-"""pytest fixtures shared by modules in this folder
-
-"""
+"""pytest fixtures shared by modules in this folder"""
 import webbrowser
 from unittest.mock import Mock
 
 import pytest
 from click.testing import CliRunner
 
-from yeahyeah_plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
+from yeahyeah_plugins.path_item_plugin.core import (
+    PathItem,
+    PathItemList,
+    PathItemPlugin,
+)
 from yeahyeah.core import YeahYeah
-from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah_plugins.url_pattern_plugin.core import (
+    URLPatternList,
+    UrlPattern,
+    WildCardUrlPattern,
+    UrlPatternsPlugin,
+)
 
 
 @pytest.fixture()
@@ -32,24 +39,27 @@ def url_pattern_list():
 
 @pytest.fixture()
 def path_item_list():
-    return PathItemList(items=[
-        PathItem(
-            name="home",
-            path="/home/a_user/",
-            help_text="(Example) Open home directory",
-        ),
-        PathItem(
-            name="external_disk",
-            path="/mnt/some_mount/user/something",
-            help_text="(Example) Open that external disk",
-        )
-    ])
+    return PathItemList(
+        items=[
+            PathItem(
+                name="home",
+                path="/home/a_user/",
+                help_text="(Example) Open home directory",
+            ),
+            PathItem(
+                name="external_disk",
+                path="/mnt/some_mount/user/something",
+                help_text="(Example) Open that external disk",
+            ),
+        ]
+    )
 
 
 @pytest.fixture()
 def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
     """An instance of the yeahyeah launch manager with some default plugins
-     and commands"""
+    and commands
+    """
     yeahyeah = YeahYeah(configuration_path=tmpdir)
     yeahyeah.add_plugin_instance(UrlPatternsPlugin(pattern_list=url_pattern_list))
     yeahyeah.add_plugin_instance(PathItemPlugin(item_list=path_item_list))
@@ -59,16 +69,18 @@ def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
 
 @pytest.fixture()
 def mock_web_browser(monkeypatch):
-    """Mock the python standard webbrowser
-    """
+    """Mock the python standard webbrowser"""
     mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("yeahyeah_plugins.url_pattern_plugin.core.webbrowser", mock_web_browser)
+    monkeypatch.setattr(
+        "yeahyeah_plugins.url_pattern_plugin.core.webbrowser", mock_web_browser
+    )
     return mock_web_browser
 
 
 class MockContextCliRunner(CliRunner):
-    """a click.testing.CliRunner that always passes a mocked context to any call, making sure any operations
-    on current dir are done in a temp folder"""
+    """a click.testing.CliRunner that always passes a mocked context to any call,
+    making sure any operations on current dir are done in a temp folder
+    """
 
     def __init__(self, *args, mock_context, **kwargs):
 
@@ -99,7 +111,8 @@ class MockContextCliRunner(CliRunner):
 
 
 class YeahYeahCommandLineParserRunner(MockContextCliRunner):
-    """A click runner that always injects a YeahYeahContext instance into the context
+    """A click runner that always injects a YeahYeahContext instance into the
+    context
     """
 
     def __init__(self, *args, mock_context, **kwargs):

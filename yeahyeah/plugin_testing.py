@@ -1,11 +1,11 @@
-"""Test resources for plugin developers.
-"""
+"""Test resources for plugin developers"""
 from click.testing import CliRunner
 
 
 class MockContextCliRunner(CliRunner):
-    """a click.testing.CliRunner that always passes a mocked context to any call, making sure any operations
-    on current dir are done in a temp folder"""
+    """A click.testing.CliRunner that always passes a mocked context to any call,
+    making sure any operations on current dir are done in a temp folder
+    """
 
     def __init__(self, *args, mock_context, **kwargs):
 
@@ -36,7 +36,8 @@ class MockContextCliRunner(CliRunner):
 
 
 class YeahYeahCommandLineParserRunner(MockContextCliRunner):
-    """A click runner that always injects a YeahYeahContext instance into the context
+    """A click runner that always injects a YeahYeahContext instance into the
+    context
     """
 
     def __init__(self, *args, mock_context, **kwargs):

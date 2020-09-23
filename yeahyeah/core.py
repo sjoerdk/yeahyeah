@@ -10,8 +10,7 @@ from yeahyeah.persistence import JSONSettingsFile
 
 
 class YeahYeah:
-    """A bare-bones launch manager. Plugins can be added to add launchable items
-    """
+    """A bare-bones launch manager. Plugins can be added to add launchable items"""
 
     def __init__(self, configuration_path):
         """
@@ -22,7 +21,7 @@ class YeahYeah:
             Path to a location where yeahyeah can read and write settings
         """
         self.configuration_path = configuration_path
-        self.settings_file_path = configuration_path / 'yeahyeah_settings.json'
+        self.settings_file_path = configuration_path / "yeahyeah_settings.json"
         self.plugins = []
 
         self.root_cli = self.get_root_cli()
@@ -56,7 +55,6 @@ class YeahYeah:
         @click.group(name=plugin.slug, help=f"Admin for {plugin.slug}")
         @click.pass_context
         def plugin_admin(ctx):
-            f"""Admin for {plugin.slug}"""
             ctx.obj = self.context
 
         for command in plugin.get_admin_commands():
@@ -88,8 +86,10 @@ class YeahYeah:
         elif type(plugin) == type:
             self.add_plugin_class(plugin_class=plugin)
         else:
-            msg = f"Cannot add {plugin}. This does not seems to be a class import" \
-                  f" path or a class"
+            msg = (
+                f"Cannot add {plugin}. This does not seems to be a class import"
+                f" path or a class"
+            )
             raise YeahYeahPluginImportException(msg)
 
     def add_plugin_class(self, plugin_class):
@@ -118,20 +118,17 @@ class YeahYeah:
             loaded from class_import path
 
         """
-        module, classname = class_import_path.rsplit('.', 1)
+        module, classname = class_import_path.rsplit(".", 1)
         class_def = getattr(importlib.import_module(module), classname)
         self.add_plugin_class(class_def)
 
     def get_root_cli(self):
-        """Create yeahyeah root group
-
-        """
+        """Create yeahyeah root group"""
 
         @click.group()
         @click.pass_context
         def root_cli(ctx):
-            """Yeahyeah launch things
-            """
+            """Yeahyeah launch things"""
 
             ctx.obj = self.context
             return root_cli
@@ -146,7 +143,7 @@ class YeahYeah:
 
         @click.group(name="yeahyeah")
         def yeahyeah_group():
-            """Admin options for yeahyeah itself"""
+            """Admin options for yeahyeah itsel"""
             pass
 
         admin_group.add_command(yeahyeah_group)
@@ -180,8 +177,7 @@ class YeahYeah:
         return status
 
     def get_edit_plugins_command(self):
-        """Open the plugins file in default editor
-        """
+        """Open the plugins file in default editor"""
 
         @click.command()
         def edit_plugins():
@@ -219,12 +215,8 @@ class YeahYeah:
 class YeahYeahPlugin:
     """Some named thing that adds launchable commands to yeahyeah"""
 
-    slug = (
-        "BasePlugin"
-    )  # Short, no space name to use for describing this plugin
-    short_slug = (
-        "Base"
-    )  # Shorter slug, for help text. For example 'url', or 'path'
+    slug = "BasePlugin"  # Short, no space name to use for describing this plugin
+    short_slug = "Base"  # Shorter slug, for help text. For example 'url', or 'path'
 
     @classmethod
     def init_from_context(cls, context: YeahYeahContext):
@@ -276,8 +268,9 @@ class YeahYeahSettings:
         return cls(plugin_paths=dict_in)
 
 
-DEFAULT_YEAHYEAH_SETTINGS = \
-    YeahYeahSettings(["yeahyeah_plugins.url_pattern_plugin.core.UrlPatternsPlugin"])
+DEFAULT_YEAHYEAH_SETTINGS = YeahYeahSettings(
+    ["yeahyeah_plugins.url_pattern_plugin.core.UrlPatternsPlugin"]
+)
 
 
 def assert_yeahyeah_settings(path):

@@ -1,15 +1,20 @@
-"""pytest fixtures shared by modules in this folder
-
-"""
-import webbrowser
-from unittest.mock import Mock
+"""pytest fixtures shared by modules in this folder"""
 
 import pytest
 from click.testing import CliRunner
 
-from yeahyeah_plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
+from yeahyeah_plugins.path_item_plugin.core import (
+    PathItem,
+    PathItemList,
+    PathItemPlugin,
+)
 from yeahyeah.core import YeahYeah
-from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah_plugins.url_pattern_plugin.core import (
+    URLPatternList,
+    UrlPattern,
+    WildCardUrlPattern,
+    UrlPatternsPlugin,
+)
 
 
 @pytest.fixture()
@@ -32,18 +37,20 @@ def url_pattern_list():
 
 @pytest.fixture()
 def path_item_list():
-    return PathItemList(items=[
-        PathItem(
-            name="home",
-            path="/home/a_user/",
-            help_text="(Example) Open home directory",
-        ),
-        PathItem(
-            name="external_disk",
-            path="/mnt/some_mount/user/something",
-            help_text="(Example) Open that external disk",
-        )
-    ])
+    return PathItemList(
+        items=[
+            PathItem(
+                name="home",
+                path="/home/a_user/",
+                help_text="(Example) Open home directory",
+            ),
+            PathItem(
+                name="external_disk",
+                path="/mnt/some_mount/user/something",
+                help_text="(Example) Open that external disk",
+            ),
+        ]
+    )
 
 
 @pytest.fixture()
@@ -57,8 +64,9 @@ def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
 
 
 class MockContextCliRunner(CliRunner):
-    """a click.testing.CliRunner that always passes a mocked context to any call, making sure any operations
-    on current dir are done in a temp folder"""
+    """A click.testing.CliRunner that always passes a mocked context to any call, making sure any operations
+    on current dir are done in a temp folder
+    """
 
     def __init__(self, *args, mock_context, **kwargs):
 
@@ -89,7 +97,8 @@ class MockContextCliRunner(CliRunner):
 
 
 class YeahYeahCommandLineParserRunner(MockContextCliRunner):
-    """A click runner that always injects a YeahYeahContext instance into the context
+    """A click runner that always injects a YeahYeahContext instance into the
+    context
     """
 
     def __init__(self, *args, mock_context, **kwargs):

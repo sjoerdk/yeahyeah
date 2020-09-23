@@ -1,6 +1,4 @@
-"""Saving and loading things. Raising useful exceptions
-
-"""
+"""Saving and loading things. Raising useful exceptions"""
 import json
 from typing import Dict
 
@@ -29,7 +27,7 @@ class SettingsFile:
             If saving does not work
 
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def load(self):
         """
@@ -41,13 +39,11 @@ class SettingsFile:
             If loading does not work
 
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class JSONSettingsFile(SettingsFile):
-    """A JSON-encoded file
-
-    """
+    """A JSON-encoded file"""
 
     def load(self):
         """

@@ -1,20 +1,28 @@
-"""pytest fixtures shared by modules in this folder
-
-"""
+"""pytest fixtures shared by modules in this folder"""
 import webbrowser
 from unittest.mock import Mock
 
 import pytest
 
-from yeahyeah_plugins.path_item_plugin.core import PathItem, PathItemList, PathItemPlugin
+from yeahyeah_plugins.path_item_plugin.core import (
+    PathItem,
+    PathItemList,
+    PathItemPlugin,
+)
 from yeahyeah.core import YeahYeah
-from yeahyeah_plugins.url_pattern_plugin.core import URLPatternList, UrlPattern, WildCardUrlPattern, UrlPatternsPlugin
+from yeahyeah_plugins.url_pattern_plugin.core import (
+    URLPatternList,
+    UrlPattern,
+    WildCardUrlPattern,
+    UrlPatternsPlugin,
+)
 
 
 @pytest.fixture(autouse=True)
 def disable_click_echo(monkeypatch):
     """Don't print click.echo to console. Click runner disables this, but not
-    all tests use click runner to invoke all commands. So this is needed"""
+    all tests use click runner to invoke all commands. So this is needed
+    """
     monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
 
 
@@ -38,18 +46,20 @@ def url_pattern_list():
 
 @pytest.fixture()
 def path_item_list():
-    return PathItemList(items=[
-        PathItem(
-            name="home",
-            path="/home/a_user/",
-            help_text="(Example) Open home directory",
-        ),
-        PathItem(
-            name="external_disk",
-            path="/mnt/some_mount/user/something",
-            help_text="(Example) Open that external disk",
-        )
-    ])
+    return PathItemList(
+        items=[
+            PathItem(
+                name="home",
+                path="/home/a_user/",
+                help_text="(Example) Open home directory",
+            ),
+            PathItem(
+                name="external_disk",
+                path="/mnt/some_mount/user/something",
+                help_text="(Example) Open that external disk",
+            ),
+        ]
+    )
 
 
 @pytest.fixture()
@@ -64,10 +74,9 @@ def yeahyeah_instance(url_pattern_list, path_item_list, tmpdir):
 
 @pytest.fixture()
 def mock_web_browser(monkeypatch):
-    """Mock the python standard webbrowser
-    """
+    """Mock the python standard webbrowser"""
     mock_web_browser = Mock(spec=webbrowser)
-    monkeypatch.setattr("yeahyeah_plugins.url_pattern_plugin.core.webbrowser", mock_web_browser)
+    monkeypatch.setattr(
+        "yeahyeah_plugins.url_pattern_plugin.core.webbrowser", mock_web_browser
+    )
     return mock_web_browser
-
-

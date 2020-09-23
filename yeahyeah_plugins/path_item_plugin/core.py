@@ -31,7 +31,7 @@ class PathItem(SerialisableMenuItem):
             return self._help_text
 
     def to_click_command(self):
-        """This url pattern as a click command that can be added with add_command()
+        """URL pattern as a click command that can be added with add_command()
 
         Returns
         -------
@@ -76,14 +76,11 @@ class PathItemPlugin(YeahYeahPlugin):
         """Plugin that holds PathItems
 
         Parameters
-        ----------        
+        ----------
         item_list: PathItemList, optional
             Optional list of items
-
-
-
-
         """
+
         self.item_list = item_list
         self.config_file_path = None
 
@@ -97,6 +94,7 @@ class PathItemPlugin(YeahYeahPlugin):
 
         Returns
         -------
+        PathItemPlugin
 
         """
         return cls.init_from_file_path(
@@ -104,7 +102,7 @@ class PathItemPlugin(YeahYeahPlugin):
         )
 
     @classmethod
-    def init_from_file_path(cls, config_file_path):
+    def init_from_file_path(cls, config_file_path) -> "PathItemPlugin":
         """
         Parameters
         ----------
@@ -113,6 +111,7 @@ class PathItemPlugin(YeahYeahPlugin):
 
         Returns
         -------
+        PathItemPlugin
 
         """
         cls.assert_config_file(config_file_path)
@@ -222,7 +221,7 @@ class PathItemPlugin(YeahYeahPlugin):
 
         @click.command()
         def list():
-            """list all paths"""
+            """List all paths"""
             click.echo("\n".join([str(x) for x in self.item_list]))
 
         return [status, list, edit, add, remove]
@@ -240,6 +239,6 @@ def open_terminal(path):
     if platform.system() == "Linux":
         subprocess.Popen(args=["konsole", "-e", "bash", "-c", f"cd {path}; $SHELL"])
     else:
-        raise NotImplemented(
+        raise NotImplementedError(
             f"Opening new terminal not supported on platform '{platform.system()}'"
         )

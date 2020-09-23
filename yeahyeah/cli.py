@@ -21,8 +21,10 @@ jj = YeahYeah(configuration_path=CORE_CONFIG_PATH)
 try:
     settings = jj.get_settings()
 except YeahYeahPersistenceException as e:
-    click.echo(f'Error: Could not read settings file. Please'
-               f' check {jj.settings_file_path}. Original error: {e}')
+    click.echo(
+        f"Error: Could not read settings file. Please"
+        f" check {jj.settings_file_path}. Original error: {e}"
+    )
     raise
 
 else:

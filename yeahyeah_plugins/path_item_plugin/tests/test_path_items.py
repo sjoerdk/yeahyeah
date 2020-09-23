@@ -13,7 +13,8 @@ from yeahyeah.core import YeahYeah
 @pytest.fixture(autouse=True)
 def disable_click_echo(monkeypatch):
     """Don't print click.echo to console. Click runner disables this, but not
-    all tests use click runner to invoke all commands. So this is needed"""
+    all tests use click runner to invoke all commands. So this is needed
+    """
     monkeypatch.setattr("yeahyeah.core.click.echo", Mock())
 
 
@@ -38,8 +39,7 @@ def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):
     assert len(path_item_plugin.item_list) == 2
 
     response = runner.invoke(
-        yeahyeah_instance.admin_cli,
-        "path_items add a_path /test/something/folder"
+        yeahyeah_instance.admin_cli, "path_items add a_path /test/something/folder"
     )
     assert response.exit_code == 0
     assert len(path_item_plugin.item_list) == 3
@@ -49,9 +49,7 @@ def test_url_pattern_plugin_admin_add__remove_list_record(yeahyeah_instance):
     assert response.exit_code == 0
 
     response = runner.invoke(
-        yeahyeah_instance.admin_cli,
-        "path_items remove a_path".split(" ")
+        yeahyeah_instance.admin_cli, "path_items remove a_path".split(" ")
     )
     assert response.exit_code == 0
     assert len(path_item_plugin.item_list) == 2
-
