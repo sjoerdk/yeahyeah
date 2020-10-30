@@ -5,7 +5,7 @@ clockifyclient==0.1.11
 coverage==5.3
 flake8==3.8.3
 pip==20.2.3
-pre-commit==2.7.1
+pre-commit==2.8.2
 pytest-runner==5.2
 pytest==6.0.2
 python-dateutil==2.8.1
