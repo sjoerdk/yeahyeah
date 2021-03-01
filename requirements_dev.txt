@@ -2,7 +2,7 @@ Click==7.0
 Sphinx==3.2.1
 bumpversion==0.6.0
 clockifyclient==0.1.11
-coverage==5.3
+coverage==5.5
 flake8==3.8.3
 pip==20.2.3
 pre-commit==2.7.1
