@@ -30,7 +30,7 @@ After installation type
 
 .. code-block:: console
 
-    $ jj admin enable-autocompletion
+    $ jj admin yeahyeah enable-autocompletion
 
 for instructions on enabling bash tab-autocompletion for all commands
 

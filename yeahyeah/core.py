@@ -193,11 +193,11 @@ class YeahYeah:
         click.echo(
             "Execute the following line in a terminal to enable auto-completion for that terminal only:\n"
             "\n"
-            '    $ eval "$(_JJ_COMPLETE=source jj)"\n'
+            '    $ eval "$(_JJ_COMPLETE=bash_source jj)"\n'
             "\n"
             "To enable auto completion permanently, run this\n"
             "\n"
-            "    $ echo 'eval \"$(_JJ_COMPLETE=source jj)\"' >> ~/.bashrc\n"
+            "    $ echo 'eval \"$(_JJ_COMPLETE=bash_source jj)\"' >> ~/.bashrc\n"
         )
 
     def get_settings(self):

@@ -20,17 +20,15 @@ class MockContextCliRunner(CliRunner):
         env=None,
         catch_exceptions=True,
         color=False,
-        mix_stderr=False,
         **extra
     ):
         return super().invoke(
             cli,
-            args,
-            input,
-            env,
-            catch_exceptions,
-            color,
-            mix_stderr,
+            args=args,
+            input=input,
+            env=env,
+            catch_exceptions=catch_exceptions,
+            color=color,
             obj=self.mock_context,
         )
 

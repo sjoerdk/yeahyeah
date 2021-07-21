@@ -4,8 +4,8 @@
 # usage:
 
 $ pip install --editable .
-$ eval "$(_YEAHYEAH_COMPLETE=source yeahyeah)"
-$ eval "$(_JJ_COMPLETE=source jj)"
+$ eval "$(_YEAHYEAH_COMPLETE=bash_source yeahyeah)"
+$ eval "$(_JJ_COMPLETE=bash_source jj)"
 $ yeahyeah
 
 """
