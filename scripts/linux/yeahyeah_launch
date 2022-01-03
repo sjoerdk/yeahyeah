@@ -15,8 +15,11 @@
 #  <keyboard shortcut>
 #  <yeahyeah command>
 #
-# And you end up with way less unneeded steps, less throw away terminals, and for some people, like me,
-# more mental space.
+# And you end up with less unneeded steps, less throw-away terminals, and
+# for some people, like me, more mental space.
+#
+# Tested with and used extensively on ubuntu 18, 20 and 21 with KDE Plasma
+# window manager.
 #
 # Installation
 # ------------
@@ -46,7 +49,7 @@ function yeahyeah_launch {
         then
             echo already exists, bring to foreground
             YEAHYEAH_WINDOW_ID=$(xdotool search --pid $YEAHYEAH_PID | tail -1)
-            xdotool windowactivate --sync $YEAHYEAH_WINDOW_ID > /dev/null && xdotool key --window $YEAHYEAH_WINDOW_ID ctrl+U && xdotool type --window $YEAHYEAH_WINDOW_ID "jj "
+            xdotool key --window $YEAHYEAH_WINDOW_ID ctrl+U && xdotool type --window $YEAHYEAH_WINDOW_ID "jj " && xdotool windowactivate --sync $YEAHYEAH_WINDOW_ID > /dev/null
 
         else
             echo creating new..
